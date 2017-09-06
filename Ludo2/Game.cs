@@ -25,6 +25,7 @@ namespace Ludo2
         Dice die = new Dice();
         private string inpt;
 
+        //Git Test
 
         //---------------- Constructor ----------------
         public Game()
