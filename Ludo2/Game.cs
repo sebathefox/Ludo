@@ -137,8 +137,8 @@ namespace Ludo2
             Console.WriteLine("Okay, her er dine spillere:");
             foreach(Player pl in this.players)
             {
-                Console.WriteLine("#" + pl.GetName);
-                Console.WriteLine("#" + pl.GetColor);
+                Console.WriteLine("#" + pl.GetName());
+                Console.WriteLine("#" + pl.GetColor());
             }
         }
 
@@ -148,9 +148,9 @@ namespace Ludo2
             Console.WriteLine("Okay, her er dine Tokens:");
             foreach (Token tok in this.tokens)
             {
-                Console.WriteLine("TokenID: " + tok.GetTokenId);
+                Console.WriteLine("TokenID: " + tok.GetTokenId());
                 Console.WriteLine("Color: " + tok.GetColor());
-                Console.WriteLine("PlayerID: " + tok.GetPlayerId);
+                Console.WriteLine("PlayerID: " + tok.GetPlayerId());
             }
         }
     }

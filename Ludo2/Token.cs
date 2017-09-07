@@ -21,27 +21,21 @@ namespace Ludo2
         }
 
         //Getter
-        public string GetToken
+        public string GetToken()
         {
-            get
-            {
                 return this.tokens.ToString();
-            }
         }
 
         //Getter
-        public string GetTokenId
+        public string GetTokenId()
         {
-            get
-            {
                 return this.tokenId.ToString();
-            }
         }
 
         //Getter
-        public int GetPlayerId
+        public int GetPlayerId()
         {
-            get { return this.playerId; }
+            return this.playerId;
         }
 
 

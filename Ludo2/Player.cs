@@ -16,20 +16,14 @@ namespace Ludo2
             this.playerColor = playerColor;
         }
 
-        public string GetName
+        public string GetName()
         {
-            get
-            {
-                return this.name;
-            }
+            return this.name;
         }
 
-        public GameColor GetColor
+        public GameColor GetColor()
         {
-            get
-            {
                 return this.playerColor;
-            }
         }
     }
 }
