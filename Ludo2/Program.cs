@@ -11,7 +11,7 @@ namespace Ludo2
     {
         static void Main(string[] args)
         {
-            //MusicGenerator();
+            //MusicGenerator(); //Uncomment for background music through the game;)
 
             //Main Game Object
             Game Ludo = new Game();
