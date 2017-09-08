@@ -11,7 +11,6 @@ namespace Ludo2
     {
         static void Main(string[] args)
         {
-            //Generates the background music
             //MusicGenerator();
 
             //Main Game Object
@@ -20,11 +19,12 @@ namespace Ludo2
             Console.Read();
         }
 
-        //static void MusicGenerator()
-        //{
-        //    System.Media.SoundPlayer player = new System.Media.SoundPlayer(Directory.GetCurrentDirectory() + "/Awesome.wav");
-        //    player.Play();
-        //}
+        //Bonus
+        static void MusicGenerator()
+        {
+            System.Media.SoundPlayer player = new System.Media.SoundPlayer(Directory.GetCurrentDirectory() + "/Awesome.wav");
+            player.Play();
+        }
     }
 
 }
