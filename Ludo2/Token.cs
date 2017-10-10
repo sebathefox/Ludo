@@ -7,7 +7,7 @@ namespace Ludo2
     {
         private GameColor color;
 
-        private int numberOfTokens = 4;
+        private int numberOfTokens = 4; //Needed Later
         private readonly int tokenId;
         private readonly int playerId;
         private Token[] tokens;

@@ -17,17 +17,30 @@ namespace Ludo2
             this.color = clr;
         }
 
-       /* public bool PlaceToken(Token tkn)
+       public bool PlaceToken(Token tkn, GameColor color)
         {
             if(tokens.Any())
             {
                 //CODE
+                if(tkn.GetColor() == color)
+                {
+                    //TODO
+                    return true;
+                }
+                else
+                {
+                    tokens[0] = tkn;
+                    return false;
+                }
 
+
+
+                
             } else
             {
-                //No tokens
                 tokens[0] = tkn;
+                return false;
             }
-        }*/
+        }
     }
 }

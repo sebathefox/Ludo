@@ -21,11 +21,12 @@ namespace Ludo2
         private int numberOfPlayers;
         private Player[] players;
 
+        //Field initialization
+        private Field[] fields;
+
         //Misc
         Dice die = new Dice();
         private string inpt;
-
-        //Git Test
 
         //---------------- Constructor ----------------
         public Game()
@@ -34,12 +35,15 @@ namespace Ludo2
 
             SetNumberOfPlayers();
             CreatePlayers();
-            ShowPlayers();
+            GetPlayers();
 
             //Begins Token stuff...
 
             CreateTokens();
             ShowTokens();
+
+
+            CreateField();
 
 
             //Now The Game Begins
@@ -63,9 +67,13 @@ namespace Ludo2
         }
         //TODO more frontend
 
-        
+
         /*
          * ---------------- End of Front End ----------------
+         *
+         * 
+         * 
+         * ---------------- Beginning of useful methods ----------------
          */
 
         //The user can choose to play a game with 2 to 4 users
@@ -118,7 +126,7 @@ namespace Ludo2
             }
             
         }
-
+        //---------------- Creates the tokens used by each player ----------------
         private void CreateTokens()
         {
 
@@ -131,14 +139,27 @@ namespace Ludo2
             }
         }
 
-        private void ShowPlayers()
+        private void CreateField()
         {
-            Console.WriteLine();
-            Console.WriteLine("Okay, her er dine spillere:");
+            this.fields = new Field[51];
+
+            for(int i = 0; i < 51; i++)
+            {
+                Console.Write(this.fields[i] + "  ");
+            }
+        }
+
+
+
+
+
+
+        //---------------- Getters, Setters and misc ----------------
+        private void GetPlayers()
+        {
             foreach(Player pl in this.players)
             {
-                Console.WriteLine("#" + pl.GetName());
-                Console.WriteLine("#" + pl.GetColor());
+                Console.WriteLine("#" + pl.GetName() + " - " + pl.GetColor());
             }
         }
 
