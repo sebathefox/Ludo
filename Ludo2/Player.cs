@@ -7,13 +7,15 @@ namespace Ludo2
     {
         private readonly string name;
         private readonly int playerId;
-        private GameColor playerColor;
+        private readonly Token[] tokens;
+        private GameColor color;
 
-        public Player(string playerName, int plrId, GameColor playerColor)
+        public Player(string playerName, int plrId, Token[] tokens)
         {
             this.name = playerName;
             this.playerId = plrId;
-            this.playerColor = playerColor;
+            this.tokens = tokens;
+            this.color = this.tokens[0].GetColor();
         }
 
         public string GetName()
@@ -23,7 +25,12 @@ namespace Ludo2
 
         public GameColor GetColor()
         {
-                return this.playerColor;
+                return this.color;
+        }
+
+        public Token[] GetTokens()
+        {
+            return this.tokens;
         }
     }
 }

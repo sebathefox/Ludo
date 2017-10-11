@@ -3,46 +3,37 @@ using System.Linq;
 
 namespace Ludo2
 {
+    public enum TokenState { Home, InPlay, Safe };
+
     public class Token
     {
-        private GameColor color;
-
-        private int numberOfTokens = 4; //Needed Later
         private readonly int tokenId;
-        private readonly int playerId;
-        private Token[] tokens;
+        private GameColor color;
+        private TokenState state;
 
         //Constructor
-        public Token(GameColor clr, int tokenId, int playerId)
+        public Token(GameColor clr, int tokenId)
         {
             this.color = clr;
             this.tokenId = tokenId;
-            this.playerId = playerId;
+            this.state = TokenState.Home;
         }
 
         //Getter
-        public string GetToken()
+        public int GetTokenId()
         {
-                return this.tokens.ToString();
+            return this.tokenId;
         }
-
-        //Getter
-        public string GetTokenId()
-        {
-                return this.tokenId.ToString();
-        }
-
-        //Getter
-        public int GetPlayerId()
-        {
-            return this.playerId;
-        }
-
 
         //Getter
         public GameColor GetColor()
         {
             return this.color;
+        }
+
+        public TokenState GetState()
+        {
+            return this.state;
         }
     }
 }

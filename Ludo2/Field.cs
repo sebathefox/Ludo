@@ -3,7 +3,6 @@ using System.Linq;
 
 namespace Ludo2
 {
-    public enum FieldType { Home, Safe, InPlay, Finish};
 
     public class Field
     {
@@ -11,6 +10,7 @@ namespace Ludo2
         private int fieldId;
         private Token[] tokens = new Token[2];
 
+        //---------------- Constructor ----------------
         public Field(int id, GameColor clr)
         {
             this.fieldId = id;
@@ -21,9 +21,9 @@ namespace Ludo2
         {
             if(tokens.Any())
             {
-                //CODE
                 if(tkn.GetColor() == color)
                 {
+                    this.color = color;
                     //TODO
                     return true;
                 }
@@ -32,15 +32,24 @@ namespace Ludo2
                     tokens[0] = tkn;
                     return false;
                 }
-
-
-
-                
-            } else
+            }
+            else
             {
                 tokens[0] = tkn;
                 return false;
             }
+        }
+
+        //---------------- Getters ----------------
+        
+        public GameColor GetFieldColor()
+        {
+            return this.color;
+        }
+
+        public int GetFieldId()
+        {
+            return this.fieldId;
         }
     }
 }

@@ -4,18 +4,15 @@ using System.Linq;
 namespace Ludo2
 {
     //The different colors the users can have
-    public enum GameColor { Yellow, Blue, Red, Green};
+    public enum GameColor { Yellow, Blue, Red, Green, None};
+    public enum FieldType { Home, Safe, InPlay, Finish };
+    public enum GameState { InPlay, Finished};
 
     public class Game
     {
         
-        private GameColor color;
+        private GameState state;
 
-        //Token initilization
-        private int numberOfTokens = 4;
-        //private int tokenId;
-        private int playerId;
-        private Token[] tokens;
 
         //Player initialization
         private int numberOfPlayers;
@@ -26,54 +23,36 @@ namespace Ludo2
 
         //Misc
         Dice die = new Dice();
-        private string inpt;
 
         //---------------- Constructor ----------------
         public Game()
         {
-            MainMenu();
-
+            Clear();
             SetNumberOfPlayers();
             CreatePlayers();
             GetPlayers();
-
-            //Begins Token stuff...
-
-            CreateTokens();
-            ShowTokens();
+            this.state = GameState.InPlay;
 
 
-            CreateField();
+            //CreateField();
+            //GetField(); //DEBUG Uncomment when needed
 
-
-            //Now The Game Begins
-
-            Console.WriteLine("The users now hit the die to see who starts");
-            Console.WriteLine("Use (r)oll to throw the die");
-            inpt = Console.ReadLine();
         }
 
-        /*
-         * ---------------- Beginning of Front End ----------------
-         */
+        private void Clear()
+        {
+            Console.Clear();
+            Console.WriteLine("Ludo");
+            Console.WriteLine();
+        }
 
-        //Make MainMenu
         private void MainMenu()
         {
-            Console.WriteLine("------------------------------ Velkommen til ludo ------------------------------"); //Screen is 80 characters wide
-
-            //TODO Need Design Optimization
-            
+            Console.WriteLine("Velkommen til ludo");
         }
-        //TODO more frontend
-
 
         /*
-         * ---------------- End of Front End ----------------
-         *
-         * 
-         * 
-         * ---------------- Beginning of useful methods ----------------
+         * ---------------- Beginning of some sort of methods;) ----------------
          */
 
         //The user can choose to play a game with 2 to 4 users
@@ -103,33 +82,40 @@ namespace Ludo2
                 Console.Write("Hvad hedder spiller {0}: ", (i+1));
                 string name = Console.ReadLine();
 
-                switch (i)
+                Token[] token = TokenAssign(i);
+
+                players[i] = new Player(name, (i + 1), token);
+            }
+        }
+
+        private Token[] TokenAssign(int colorIndex)
+        {
+            Token[] tokens = new Token[4];
+
+            for (int i = 0; i <= 3; i++)
+            {
+                switch (colorIndex)
                 {
-                    case (0):
-                        this.color = GameColor.Yellow;
+                    case 0:
+                        tokens[i] = new Token(GameColor.Yellow, (i + 1));
                         break;
-                    case (1):
-                        this.color = GameColor.Blue;
+                    case 1:
+                        tokens[i] = new Token(GameColor.Blue, (i + 1));
                         break;
-                    case (2):
-                        this.color = GameColor.Red;
+                    case 2:
+                        tokens[i] = new Token(GameColor.Red, (i + 1));
                         break;
-                    case (3):
-                        this.color = GameColor.Green;
+                    case 3:
+                        tokens[i] = new Token(GameColor.Green, (i + 1));
                         break;
                 }
-
-                players[i] = new Player(name, i + 1, color);
-                this.playerId = i + 1;
-                CreateTokens();
-                ShowTokens();
             }
-            
+            return tokens;
         }
-        //---------------- Creates the tokens used by each player ----------------
-        private void CreateTokens()
-        {
 
+        //---------------- Creates the tokens used by each player ----------------
+        /*private void CreateTokens()
+        {
             this.tokens = new Token[this.numberOfTokens];
 
             Console.WriteLine();
@@ -137,41 +123,53 @@ namespace Ludo2
             {
                 tokens[i] = new Token(this.color, i + 1, playerId);
             }
-        }
+        }*/
 
         private void CreateField()
         {
-            this.fields = new Field[51];
+            this.fields = new Field[52];
 
-            for(int i = 0; i < 51; i++)
+            for(int i = 0; i < 52; i++)
             {
-                Console.Write(this.fields[i] + "  ");
+                fields[i] = new Field(i + 1, GameColor.None);
             }
         }
 
-
-
-
-
-
         //---------------- Getters, Setters and misc ----------------
+
+        private int ThrowTest()
+        {
+            string inpt = Console.ReadLine();
+            while(true) {
+                inpt.ToLower();
+                if (inpt == "r" || inpt == "roll")
+                {
+                    die.ThrowDice();
+                    Console.WriteLine("You got: " + die.GetValue());
+                    return die.GetValue();
+                }
+            }
+        }
+
+        //TODO
+        private void Move()
+        {
+
+        }
+
         private void GetPlayers()
         {
             foreach(Player pl in this.players)
             {
-                Console.WriteLine("#" + pl.GetName() + " - " + pl.GetColor());
+                Console.WriteLine("#" + pl.GetName() + " - " + pl.GetColor() + " - " + pl.GetTokens());
             }
         }
-
-        private void ShowTokens()
+        
+        public void GetField()
         {
-            Console.WriteLine();
-            Console.WriteLine("Okay, her er dine Tokens:");
-            foreach (Token tok in this.tokens)
+            foreach(Field fi in this.fields)
             {
-                Console.WriteLine("TokenID: " + tok.GetTokenId());
-                Console.WriteLine("Color: " + tok.GetColor());
-                Console.WriteLine("PlayerID: " + tok.GetPlayerId());
+                Console.WriteLine(fi.GetFieldId() + " - " + fi.GetFieldColor());
             }
         }
     }
