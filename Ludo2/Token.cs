@@ -7,25 +7,23 @@ namespace Ludo2
 
     public class Token
     {
-        private readonly int tokenId;
+        private int tokenId;
         private GameColor color;
         private TokenState state;
 
         //Constructor
-        public Token(GameColor clr, int tokenId)
+        public Token(int id, GameColor clr)
         {
+            this.tokenId = id;
             this.color = clr;
-            this.tokenId = tokenId;
             this.state = TokenState.Home;
         }
 
-        //Getter
         public int GetTokenId()
         {
             return this.tokenId;
         }
 
-        //Getter
         public GameColor GetColor()
         {
             return this.color;

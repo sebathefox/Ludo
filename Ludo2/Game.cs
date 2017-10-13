@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 
 namespace Ludo2
 {
-    //The different colors the users can have
+    //defining the different enums used in the program
     public enum GameColor { Yellow, Blue, Red, Green, None};
     public enum FieldType { Home, Safe, InPlay, Finish };
     public enum GameState { InPlay, Finished};
@@ -13,15 +14,11 @@ namespace Ludo2
         
         private GameState state;
 
-
-        //Player initialization
         private int numberOfPlayers;
         private Player[] players;
-
-        //Field initialization
+        private int playerTurn = 1;
         private Field[] fields;
 
-        //Misc
         Dice die = new Dice();
 
         //---------------- Constructor ----------------
@@ -30,9 +27,9 @@ namespace Ludo2
             Clear();
             SetNumberOfPlayers();
             CreatePlayers();
-            GetPlayers();
+            //GetPlayers();
             this.state = GameState.InPlay;
-
+            Turn();
 
             //CreateField();
             //GetField(); //DEBUG Uncomment when needed
@@ -78,7 +75,6 @@ namespace Ludo2
             Console.WriteLine();
             for (int i = 0; i < this.numberOfPlayers; i++)
             {
-                
                 Console.Write("Hvad hedder spiller {0}: ", (i+1));
                 string name = Console.ReadLine();
 
@@ -97,16 +93,16 @@ namespace Ludo2
                 switch (colorIndex)
                 {
                     case 0:
-                        tokens[i] = new Token(GameColor.Yellow, (i + 1));
+                        tokens[i] = new Token((i + 1), GameColor.Yellow);
                         break;
                     case 1:
-                        tokens[i] = new Token(GameColor.Blue, (i + 1));
+                        tokens[i] = new Token((i + 1), GameColor.Blue);
                         break;
                     case 2:
-                        tokens[i] = new Token(GameColor.Red, (i + 1));
+                        tokens[i] = new Token((i + 1), GameColor.Red);
                         break;
                     case 3:
-                        tokens[i] = new Token(GameColor.Green, (i + 1));
+                        tokens[i] = new Token((i + 1), GameColor.Green);
                         break;
                 }
             }
@@ -152,9 +148,81 @@ namespace Ludo2
         }
 
         //TODO
-        private void Move()
+        private void Turn()
         {
+            while(this.state == GameState.InPlay)
+            {
+                Player turn = players[(playerTurn-1)];
+                Console.WriteLine("Det er " + turn.GetName() + "'s tur");
+                do
+                {
+                    Console.WriteLine("Tryk 'k' for at kaste med terningen");
+                }
+                while (Console.ReadKey().KeyChar != 'k');
+                Console.WriteLine("Du slog: " + die.ThrowDice().ToString());
+                Console.WriteLine();
+                CanIMove(turn.GetTokens());
+            }
+        }
 
+        private void CanIMove(Token[] tokens)
+        {
+            int choice = 0;
+
+            Console.WriteLine("Her er dine brikker:");
+            foreach(Token tkn in tokens)
+            {
+                Console.Write("Brik nr " + tkn.GetTokenId() + ": er placeret: " + tkn.GetState());
+
+                switch(tkn.GetState())
+                {
+                    case TokenState.Home:
+                        if(die.GetValue() == 6)
+                        {
+                            Console.Write(" - Kan spilles");
+                            choice++;
+                        }
+                        else
+                        {
+                            Console.Write(" - Kan ikke spilles");
+                        }
+                        break;
+                    default:
+                        Console.Write("Kan spilles");
+                        choice++;
+                        break;
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
+            Console.WriteLine("Du har " + choice.ToString() + " muligheder i den her tur");
+
+            if(choice == 0)
+            {
+                this.ChangeTurn();
+            }
+            else
+            {
+                Console.WriteLine("Vælg den brik du vil rykke");
+            }
+        }
+
+        private void ChangeTurn()
+        {
+            Console.WriteLine();
+            if(playerTurn == numberOfPlayers)
+            {
+                playerTurn = 1;
+            }
+            else
+            {
+                playerTurn++;
+            }
+
+            Console.WriteLine("Skifter spiller");
+            Thread.Sleep(8000);
+            Clear();
+            Turn();
         }
 
         private void GetPlayers()
