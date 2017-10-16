@@ -21,6 +21,11 @@ namespace Ludo2
 
         //---------------- Getters ----------------
 
+        public int GetId()
+        {
+            return this.playerId;
+        }
+
         public string GetName()
         {
             return this.name;
@@ -34,6 +39,10 @@ namespace Ludo2
         public Token[] GetTokens()
         {
             return this.tokens;
+        }
+        public Token GetToken(int tknid)
+        {
+            return this.tokens[tknid];
         }
     }
 }

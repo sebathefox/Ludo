@@ -6,7 +6,6 @@ namespace Ludo2
 {
     //defining the different enums used in the program
     public enum GameColor { Yellow, Blue, Red, Green, None};
-    public enum FieldType { Home, Safe, InPlay, Finish };
     public enum GameState { InPlay, Finished};
 
     public class Game
@@ -32,7 +31,20 @@ namespace Ludo2
             this.state = GameState.InPlay;
             Turn();
 
-            
+
+            /*
+             * TODO 1 Make the methods needed to move a token to a specific field
+             * 
+             * TODO 2 Make it possible to win the game
+             * 
+             * TODO 3 Make Stars and 'globusses'?!?
+             */
+
+            //PlaceToken(players[playerTurn], players[playerTurn].GetId, players[playerTurn].GetToken[tknId], FieldHere);
+
+            // FIX tknId 
+            // FIX FieldHere
+
             //GetField(); //DEBUG Uncomment when needed
 
         }
@@ -191,7 +203,7 @@ namespace Ludo2
             }
             else
             {
-                Console.WriteLine("Vælg den brik du vil rykke");
+                ChooseTokenToMove();
             }
         }
 
@@ -214,29 +226,45 @@ namespace Ludo2
             Turn();
         }
 
-        private void PlaceToken()
+        private int ChooseTokenToMove()
         {
-            //CODE
+            int tokenToMove = 0; //Only used in this method
 
+            Clear();
+            Console.WriteLine("Vælg den brik du vil rykke (Brug et tal fra 1 til 4)");
+            while (tokenToMove < 1 || tokenToMove > 4)
+            {
+                if (!int.TryParse(Console.ReadKey().KeyChar.ToString(), out tokenToMove))
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Ugyldig værdi, vælg et tal mellem 1 og 4");
+                }
+            }
+            return tokenToMove;
         }
 
+        //---------------- Method ----------------
+        private void FieldCalc(GameColor plrColor)
+        {
+            //CODE
+            foreach(Field fi in this.fields)
+            {
+                if (fi.GetFieldColor() == plrColor)
 
+                {
 
+                }
+            }
+        }
 
-        /*
-         * 
-         * 
-         * 
-         * TODO 1 Make the methods needed to move a token to a specific field
-         * 
-         * TODO 2 Make it possible to win the game
-         * 
-         * TODO 3 Make Stars and 'globusses'?!?
-         * 
-         * 
-         * 
-         */
+        //---------------- Method ----------------
+        private void PlaceToken(Player plr, int fieldToMoveTo)
+        {
+            int tknId = ChooseTokenToMove();
+            int plrId = players[playerTurn].GetId();
 
+            fields[fieldToMoveTo].PlaceToken(players[plrId].GetToken(tknId) , plr.GetColor());
+        }
 
         //---------------- Getters ----------------
 
