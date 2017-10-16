@@ -27,11 +27,12 @@ namespace Ludo2
             Clear();
             SetNumberOfPlayers();
             CreatePlayers();
-            //GetPlayers();
+            CreateField();
+            GetPlayers();
             this.state = GameState.InPlay;
             Turn();
 
-            //CreateField();
+            
             //GetField(); //DEBUG Uncomment when needed
 
         }
@@ -43,16 +44,13 @@ namespace Ludo2
             Console.WriteLine();
         }
 
+        //---------------- Method ----------------
         private void MainMenu()
         {
             Console.WriteLine("Velkommen til ludo");
         }
 
-        /*
-         * ---------------- Beginning of some sort of methods;) ----------------
-         */
-
-        //The user can choose to play a game with 2 to 4 users
+        //---------------- Method ----------------
         private void SetNumberOfPlayers()
         {
             Console.Write("Hvor mange spillere?: ");
@@ -67,7 +65,7 @@ namespace Ludo2
             }
         }
 
-        //This actually makes the players and inserts them into an object array
+        //---------------- Method ----------------
         private void CreatePlayers()
         {
             this.players = new Player[this.numberOfPlayers];
@@ -84,6 +82,7 @@ namespace Ludo2
             }
         }
 
+        //---------------- Method ----------------
         private Token[] TokenAssign(int colorIndex)
         {
             Token[] tokens = new Token[4];
@@ -109,18 +108,7 @@ namespace Ludo2
             return tokens;
         }
 
-        //---------------- Creates the tokens used by each player ----------------
-        /*private void CreateTokens()
-        {
-            this.tokens = new Token[this.numberOfTokens];
-
-            Console.WriteLine();
-            for (int i = 0; i < this.numberOfTokens; i++)
-            {
-                tokens[i] = new Token(this.color, i + 1, playerId);
-            }
-        }*/
-
+        //---------------- Method ----------------
         private void CreateField()
         {
             this.fields = new Field[52];
@@ -131,8 +119,7 @@ namespace Ludo2
             }
         }
 
-        //---------------- Getters, Setters and misc ----------------
-
+        //---------------- Method ----------------
         private int ThrowTest()
         {
             string inpt = Console.ReadLine();
@@ -147,7 +134,7 @@ namespace Ludo2
             }
         }
 
-        //TODO
+        //---------------- Method ----------------
         private void Turn()
         {
             while(this.state == GameState.InPlay)
@@ -165,6 +152,7 @@ namespace Ludo2
             }
         }
 
+        //---------------- Method ----------------
         private void CanIMove(Token[] tokens)
         {
             int choice = 0;
@@ -207,6 +195,7 @@ namespace Ludo2
             }
         }
 
+        //---------------- Method ----------------
         private void ChangeTurn()
         {
             Console.WriteLine();
@@ -224,6 +213,32 @@ namespace Ludo2
             Clear();
             Turn();
         }
+
+        private void PlaceToken()
+        {
+            //CODE
+
+        }
+
+
+
+
+        /*
+         * 
+         * 
+         * 
+         * TODO 1 Make the methods needed to move a token to a specific field
+         * 
+         * TODO 2 Make it possible to win the game
+         * 
+         * TODO 3 Make Stars and 'globusses'?!?
+         * 
+         * 
+         * 
+         */
+
+
+        //---------------- Getters ----------------
 
         private void GetPlayers()
         {

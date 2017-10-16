@@ -11,13 +11,15 @@ namespace Ludo2
         private GameColor color;
         private TokenState state;
 
-        //Constructor
+        //---------------- Constructor ----------------
         public Token(int id, GameColor clr)
         {
             this.tokenId = id;
             this.color = clr;
             this.state = TokenState.Home;
         }
+
+        //---------------- Getters ----------------
 
         public int GetTokenId()
         {

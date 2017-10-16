@@ -10,6 +10,7 @@ namespace Ludo2
         private readonly Token[] tokens;
         private GameColor color;
 
+        //---------------- Constructor ----------------
         public Player(string playerName, int plrId, Token[] tokens)
         {
             this.name = playerName;
@@ -17,6 +18,8 @@ namespace Ludo2
             this.tokens = tokens;
             this.color = this.tokens[0].GetColor();
         }
+
+        //---------------- Getters ----------------
 
         public string GetName()
         {

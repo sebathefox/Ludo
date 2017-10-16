@@ -24,7 +24,6 @@ namespace Ludo2
                 if(tkn.GetColor() == color)
                 {
                     this.color = color;
-                    //TODO
                     return true;
                 }
                 else
