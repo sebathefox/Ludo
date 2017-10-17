@@ -27,14 +27,13 @@ namespace Ludo2
             SetNumberOfPlayers();
             CreatePlayers();
             CreateField();
+            GetField(); //DEBUG Uncomment when needed
             GetPlayers();
             this.state = GameState.InPlay;
             Turn();
 
 
             /*
-             * TODO 1 Make the methods needed to move a token to a specific field
-             * 
              * TODO 2 Make it possible to win the game
              * 
              * TODO 3 Make Stars and 'globusses'?!?
@@ -45,7 +44,7 @@ namespace Ludo2
             // FIX tknId 
             // FIX FieldHere
 
-            //GetField(); //DEBUG Uncomment when needed
+            
 
         }
 
@@ -88,9 +87,11 @@ namespace Ludo2
                 Console.Write("Hvad hedder spiller {0}: ", (i+1));
                 string name = Console.ReadLine();
 
+                int spAssign = StartpointAssignment(i);
+
                 Token[] token = TokenAssign(i);
 
-                players[i] = new Player(name, (i + 1), token);
+                players[i] = new Player(name, (i + 1), token, spAssign);
             }
         }
 
@@ -118,6 +119,27 @@ namespace Ludo2
                 }
             }
             return tokens;
+        }
+
+        private int StartpointAssignment(int i)
+        {
+            int x = 0;
+            switch (i)
+            {
+                case 0:
+                    x = 0;
+                    break;
+                case 1:
+                    x = 13;
+                    break;
+                case 2:
+                    x = 26;
+                    break;
+                case 3:
+                    x = 39;
+                    break;
+            }
+            return x;
         }
 
         //---------------- Method ----------------
@@ -203,7 +225,7 @@ namespace Ludo2
             }
             else
             {
-                ChooseTokenToMove();
+                MoveToField(players , die.GetValue());
             }
         }
 
@@ -226,6 +248,7 @@ namespace Ludo2
             Turn();
         }
 
+        //---------------- Method ----------------
         private int ChooseTokenToMove()
         {
             int tokenToMove = 0; //Only used in this method
@@ -244,26 +267,54 @@ namespace Ludo2
         }
 
         //---------------- Method ----------------
-        private void FieldCalc(GameColor plrColor)
-        {
-            //CODE
-            foreach(Field fi in this.fields)
-            {
-                if (fi.GetFieldColor() == plrColor)
-
-                {
-
-                }
-            }
-        }
-
-        //---------------- Method ----------------
-        private void PlaceToken(Player plr, int fieldToMoveTo)
+        private void MoveToField(Player[] plr, int dieRoll)
         {
             int tknId = ChooseTokenToMove();
             int plrId = players[playerTurn].GetId();
+            int i = 1;
+            bool isUsed = fields[i].IsTokenPlaced();
 
-            fields[fieldToMoveTo].PlaceToken(players[plrId].GetToken(tknId) , plr.GetColor());
+            int startPos = plr[plrId].GetStartpoint();
+
+            if(isUsed == false)
+            {
+                plr[playerTurn].GetToken(tknId).SetState(TokenState.InPlay);
+                switch (dieRoll)
+                {
+                    case (6):
+                        if (plr[playerTurn].GetTokens().Equals(TokenState.InPlay))
+                        {
+                            fields[(plr[playerTurn].GetToken(tknId).GetPosition() + 6)].PlaceToken(plr[playerTurn].GetToken(tknId),
+                            plr[playerTurn].GetColor());
+                        }
+                        else
+                        {
+                            fields[startPos].PlaceToken(plr[playerTurn].GetToken(tknId), plr[playerTurn].GetColor());
+                            plr[playerTurn].GetToken(tknId).SetPosition(plr[playerTurn].GetStartpoint());
+                        }
+                        break;
+                    case (5):
+                        fields[(plr[playerTurn].GetToken(tknId).GetPosition() + 5)].PlaceToken(plr[playerTurn].GetToken(tknId),
+                            plr[playerTurn].GetColor());
+                        break;
+                    case (4):
+                        fields[(plr[playerTurn].GetToken(tknId).GetPosition() + 4)].PlaceToken(plr[playerTurn].GetToken(tknId),
+                            plr[playerTurn].GetColor());
+                        break;
+                    case (3):
+                        fields[(plr[playerTurn].GetToken(tknId).GetPosition() + 3)].PlaceToken(plr[playerTurn].GetToken(tknId),
+                            plr[playerTurn].GetColor());
+                        break;
+                    case (2):
+                        fields[(plr[playerTurn].GetToken(tknId).GetPosition() + 2)].PlaceToken(plr[playerTurn].GetToken(tknId),
+                            plr[playerTurn].GetColor());
+                        break;
+                    case (1):
+                        fields[(plr[playerTurn].GetToken(tknId).GetPosition() + 1)].PlaceToken(plr[playerTurn].GetToken(tknId),
+                            plr[playerTurn].GetColor());
+                        break;
+                }         
+            }
         }
 
         //---------------- Getters ----------------
@@ -272,7 +323,7 @@ namespace Ludo2
         {
             foreach(Player pl in this.players)
             {
-                Console.WriteLine("#" + pl.GetName() + " - " + pl.GetColor() + " - " + pl.GetTokens());
+                Console.WriteLine("#" + pl.GetName() + " - " + pl.GetColor() + " - " + pl.GetTokens() + " - " + pl.GetStartpoint());
             }
         }
         

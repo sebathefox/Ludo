@@ -7,7 +7,7 @@ namespace Ludo2
     public class Field
     {
         private GameColor color;
-        private int fieldId;
+        private readonly int fieldId;
         private Token[] tokens = new Token[2];
 
         //---------------- Constructor ----------------
@@ -35,6 +35,7 @@ namespace Ludo2
             else
             {
                 tokens[0] = tkn;
+                color = GameColor.None;
                 return false;
             }
         }
@@ -49,6 +50,17 @@ namespace Ludo2
         public int GetFieldId()
         {
             return this.fieldId;
+        }
+
+        public bool IsTokenPlaced()
+        {
+            switch(color)
+            {
+                case (GameColor.None):
+                    return false;
+                default:
+                    return true;
+            }
         }
     }
 }

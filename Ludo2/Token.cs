@@ -7,9 +7,10 @@ namespace Ludo2
 
     public class Token
     {
-        private int tokenId;
-        private GameColor color;
+        private readonly int tokenId;
+        private readonly GameColor color;
         private TokenState state;
+        private int positionId = 0;
 
         //---------------- Constructor ----------------
         public Token(int id, GameColor clr)
@@ -34,6 +35,21 @@ namespace Ludo2
         public TokenState GetState()
         {
             return this.state;
+        }
+
+        public void SetState(TokenState ts)
+        {
+            this.state = ts;
+        }
+
+        public void SetPosition(int pos)
+        {
+            this.positionId = pos;
+        }
+
+        public int GetPosition()
+        {
+            return positionId;
         }
     }
 }
