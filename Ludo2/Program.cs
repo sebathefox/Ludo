@@ -19,7 +19,7 @@ namespace Ludo2
             Console.Read();
         }
 
-        //Bonus
+        //Makes some awesome background music
         static void MusicGenerator()
         {
             System.Media.SoundPlayer player = new System.Media.SoundPlayer(Directory.GetCurrentDirectory() + "/Awesome.wav");

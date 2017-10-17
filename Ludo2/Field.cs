@@ -6,52 +6,60 @@ namespace Ludo2
 
     public class Field
     {
-        private GameColor color;
-        private readonly int fieldId;
-        private Token[] tokens = new Token[2];
+        private GameColor color; //used if there is a token on the field
+        private readonly int fieldId; //Every field needs an id
+        private Token[] tokens = new Token[2]; //creates an array to hold up to two tokens at the same time
 
         //---------------- Constructor ----------------
-        public Field(int id, GameColor clr)
+        public Field(int fieldId, GameColor color)
         {
-            this.fieldId = id;
-            this.color = clr;
+            //Self explanatory
+            this.fieldId = fieldId;
+            this.color = color;
         }
 
-       public bool PlaceToken(Token tkn, GameColor color)
+        //Places the token on the field
+        public bool PlaceToken(Token token, GameColor color)
         {
-            if(tokens.Any())
+            if(tokens.Any()) //checks if there is any tokens on the field
             {
-                if(tkn.GetColor() == color)
+                if(token.GetColor() != color)
                 {
-                    this.color = color;
-                    return true;
+                    //Make the Kill function to send the enemy token home
+                    return false;
                 }
                 else
                 {
-                    tokens[0] = tkn;
-                    return false;
+                    tokens[0] = token; //Insert the token into the array
+                    return true;
                 }
             }
-            else
+            else //No tokens found
             {
-                tokens[0] = tkn;
+                tokens[0] = token;
                 color = GameColor.None;
-                return false;
+                return true;
             }
         }
 
         //---------------- Getters ----------------
         
+        //Gets the color of the field
         public GameColor GetFieldColor()
         {
             return this.color;
         }
 
+        //Gets the id of the field
         public int GetFieldId()
         {
             return this.fieldId;
         }
 
+        //----->>>WARNING<<<-----
+        //MAYBE USELESS METHOD
+        
+        //Checks if there is a token on the field
         public bool IsTokenPlaced()
         {
             switch(color)
