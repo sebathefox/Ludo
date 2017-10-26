@@ -26,6 +26,7 @@ namespace Ludo2
                 if(token.GetColor() != color)
                 {
                     //Make the Kill function to send the enemy token home
+                    //Probably KillToken([MAYBE SOMETHING HERE]);
                     return false;
                 }
                 else

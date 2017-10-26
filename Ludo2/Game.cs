@@ -15,7 +15,7 @@ namespace Ludo2
 
         private int numberOfPlayers; //Defines the number of players in the game
         private Player[] players; //defines the array of players
-        private int plrArrayId = 1; //Defines the player's turn
+        private int plrArrayId = 0; //Defines the player's turn
         private Field[] fields; //Defines the fields in the game
 
         Dice die = new Dice(); //Makes an object of the class 'Dice'
@@ -23,21 +23,13 @@ namespace Ludo2
         //---------------- Constructor ----------------
         public Game()
         {
-            //Check these below
-            //Clear(); 
-            SetNumberOfPlayers();
-            CreatePlayers();
-            CreateField();
+            SetNumberOfPlayers(); //Sets the number of players before the game begins
+            CreatePlayers(); //This method creates the players
+            CreateField(); //Creates the fields used in the game
             //GetField(); //DEBUG Uncomment when needed
             GetPlayers();
             this.state = GameState.InPlay; //Changes the gamestate to play since we're actually beginning to play the game
-            Turn();
-
-            /*
-             * TODO 2 Make it possible to win the game
-             * 
-             * TODO 3 Make Stars and 'globusses'?!?
-             */
+            Turn(); //Begins player one's turn
         }
 
 
@@ -46,7 +38,7 @@ namespace Ludo2
         {
             Console.Clear(); //Clears the console
             Console.WriteLine("Ludo"); //Writes ludo to the console
-            Console.WriteLine(this.players[plrArrayId -1].ToString());
+            Console.WriteLine(this.players[plrArrayId].ToString());
             Console.WriteLine(); //makes a blank line
         }
 
@@ -153,7 +145,7 @@ namespace Ludo2
         {
             while(state == GameState.InPlay) //Checks if the game is on
             {
-                Player turn = players[(plrArrayId-1)]; //Finds the player in the array
+                Player turn = players[(plrArrayId)]; //Finds the player in the array
                 Console.WriteLine("Det er " + turn.GetName() + "'s tur"); //Some 'nice' output
                 do
                 {
@@ -215,9 +207,9 @@ namespace Ludo2
         private void ChangeTurn()
         {
             Console.WriteLine();
-            if(plrArrayId == numberOfPlayers)
+            if(plrArrayId == (numberOfPlayers - 1))
             {
-                plrArrayId = 1;
+                plrArrayId = 0;
             }
             else
             {
@@ -257,11 +249,14 @@ namespace Ludo2
                 Console.WriteLine(pl.GetName() + " " + pl.GetId());
             }
 
-
             int tknId = ChooseTokenToMove();
-            int plrId = players[(numberOfPlayers - 1)].GetId(); //Gets the id of the player
-            int plrArrayId = plrId - 1; //Instead of writing (plrId - 1) everywhere
-            int fieldToMove = 1; //FIX
+           // int plrId = players[(numberOfPlayers - 1)].GetId(); //Gets the id of the player
+            int plrArrayId = numberOfPlayers - 1; //Instead of writing (plrId - 1) everywhere
+
+            //Start Of FIX
+            int fieldToMove = plr[plrArrayId].GetToken(tknId).GetPosition() + die.GetValue();
+
+            //End Of FIX
             bool isUsed = fields[fieldToMove].IsTokenPlaced(); //Checks if there is any tokens
 
             int startPos = plr[plrArrayId].GetStartpoint();
@@ -271,7 +266,7 @@ namespace Ludo2
                 plr[plrArrayId].GetToken(tknId).SetState(TokenState.InPlay);
                 switch (dieRoll)
                 {
-                    case (6):
+                    case (6): //OPTIMIZE
                         if (plr[plrArrayId].GetTokens().Equals(TokenState.InPlay))
                         {
                             fields[(plr[plrArrayId].GetToken(tknId).GetPosition() + 6)].PlaceToken(plr[plrArrayId].GetToken(tknId),
@@ -284,29 +279,28 @@ namespace Ludo2
                         }
                         break;
                     case (5):
-                        MoveToken(plr, tknId, 5);
+                        MoveToken(plr, tknId, fieldToMove);
                         break;
                     case (4):
-                        MoveToken(plr, tknId, 4);
+                        MoveToken(plr, tknId, fieldToMove);
                         break;
                     case (3):
-                        MoveToken(plr, tknId, 3);
+                        MoveToken(plr, tknId, fieldToMove);
                         break;
                     case (2):
-                        MoveToken(plr, tknId, 2);
+                        MoveToken(plr, tknId, fieldToMove);
                         break;
                     case (1):
-                        MoveToken(plr, tknId, 1);
+                        MoveToken(plr, tknId, fieldToMove);
                         break;
                 }
             }
         }
 
         //Moves the token
-        private void MoveToken(Player[] plr, int tknId, int number)
+        private void MoveToken(Player[] plr, int tknId, int fieldToMove)
         {
-            fields[(plr[plrArrayId].GetToken(tknId).GetPosition() + number)].PlaceToken(plr[plrArrayId].GetToken(tknId),
-                                                                                        plr[plrArrayId].GetColor());
+            fields[fieldToMove].PlaceToken(plr[plrArrayId].GetToken(tknId), plr[plrArrayId].GetColor());
         }
 
         //---------------- Getters ----------------
