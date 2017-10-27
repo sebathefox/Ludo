@@ -8,7 +8,7 @@ namespace Ludo2
     {
         private GameColor color; //used if there is a token on the field
         private readonly int fieldId; //Every field needs an id
-        private Token[] tokens = new Token[2]; //creates an array to hold up to two tokens at the same time
+        private Token[] tokens = new Token[4]; //creates an array to hold up to two tokens at the same time
 
         //---------------- Constructor ----------------
         public Field(int fieldId, GameColor color)
@@ -31,14 +31,14 @@ namespace Ludo2
                 }
                 else
                 {
-                    tokens[0] = token; //Insert the token into the array
+                    tokens[1] = token; //Insert the token into the array
                     return true;
                 }
             }
             else //No tokens found
             {
                 tokens[0] = token;
-                color = GameColor.None;
+                this.color = token.GetColor();
                 return true;
             }
         }
@@ -58,6 +58,8 @@ namespace Ludo2
         }
 
         //----->>>WARNING<<<-----
+        //BETA
+        //UNSUPPORTED
         //MAYBE USELESS METHOD
         
         //Checks if there is a token on the field

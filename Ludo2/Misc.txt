@@ -1,0 +1,9 @@
+﻿Different Comments:
+	//TODO
+	//DEBUG
+	//FIX
+	//OPTIMIZATION
+	//INFO (With this you dont need to type info )
+	//UNSUPPORTED
+	//BETA
+	//WARNING

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 
 namespace Ludo2
 {
@@ -114,7 +113,7 @@ namespace Ludo2
             switch (i)
             {
                 case 0:
-                    startPoint = 0;
+                    startPoint = 0; //Startpoints is calculated like an array AKA begins with 0
                     break;
                 case 1:
                     startPoint = 13;
@@ -252,14 +251,13 @@ namespace Ludo2
             int tknId = ChooseTokenToMove();
            // int plrId = players[(numberOfPlayers - 1)].GetId(); //Gets the id of the player
             int plrArrayId = numberOfPlayers - 1; //Instead of writing (plrId - 1) everywhere
+            int fieldToMove = plr[plrArrayId].GetToken(tknId).GetPosition() + die.GetValue(); //Calculates the field to move the token to
 
-            //Start Of FIX
-            int fieldToMove = plr[plrArrayId].GetToken(tknId).GetPosition() + die.GetValue();
-
-            //End Of FIX
             bool isUsed = fields[fieldToMove].IsTokenPlaced(); //Checks if there is any tokens
 
-            int startPos = plr[plrArrayId].GetStartpoint();
+            int startPos = plr[plrArrayId].GetStartpoint(); //Gets the starting position of each individual player
+
+            //WARNING Nearly no Comments below this point
 
             if(isUsed == false)
             {

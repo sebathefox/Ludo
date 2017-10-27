@@ -1,0 +1,10 @@
+﻿This log was made 27-10-2017 09:03 AM
+By me The Developer
+
+27-10-2017 09:04:
+
+I was trying to fix the problem where the tokens would crash the game if i tried to move them.
+
+SAME DAY 10:05:
+
+I havent fixed it yet but i began optimizing the code so that it would be easier to implement the code3 for token movement

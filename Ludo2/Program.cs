@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ludo2
 {
@@ -22,6 +19,7 @@ namespace Ludo2
         //Makes some awesome background music
         static void MusicGenerator()
         {
+            //Makes a new instance of the SoundPlayer class
             System.Media.SoundPlayer player = new System.Media.SoundPlayer(Directory.GetCurrentDirectory() + "/Awesome.wav");
             player.Play();
         }

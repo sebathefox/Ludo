@@ -9,12 +9,11 @@ namespace Ludo2
         private readonly int playerId; //A unique id to this player only
         private readonly Token[] tokens; //A array with the tokens the player uses in the game
         private readonly GameColor color; // the color of the player
-        private readonly int startPoint; //Where to begin from in the field array W.I.P
+        private readonly int startPoint; //Where to begin from in the field array
 
         //---------------- Constructor ----------------
         public Player(string name, int playerId, Token[] tokens, int startPoint)
         {
-
             //Self explanatory
             this.name = name;
             this.playerId = playerId;
