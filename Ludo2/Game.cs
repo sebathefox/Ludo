@@ -312,7 +312,7 @@ namespace Ludo2
             }
         }
         
-        //Gets a list of all the fields DEBUG ONLY
+        //Gets a list of all the fields DEBUG ONLY NOT RELEASE
         public void GetField()
         {
             foreach(Field fi in this.fields)

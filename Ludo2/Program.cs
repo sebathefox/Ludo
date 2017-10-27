@@ -8,8 +8,16 @@ namespace Ludo2
     {
         static void Main(string[] args)
         {
-            //MusicGenerator(); //Uncomment for background music through the game;)
-
+            if(args != null)
+            {
+                foreach(string ar in args)
+                {
+                    if (ar == "-m" || ar == "-M")
+                    {
+                        MusicGenerator();
+                    }
+                }
+            }
             //Main Game Object
             Game Ludo = new Game();
 
