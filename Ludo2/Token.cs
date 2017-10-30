@@ -10,7 +10,7 @@ namespace Ludo2
         private readonly int tokenId; // the unique id of the token
         private readonly GameColor color; //The color of the token
         private TokenState state; //Defines if the token is Home, safe or in play
-        private int positionId = 0; //defines the position of the tokens
+        private int positionId = 0; //defines the position of the tokens //FIX needs better definition...
 
         //---------------- Constructor ----------------
         public Token(int tokenId, GameColor color)

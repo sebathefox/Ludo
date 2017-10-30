@@ -25,7 +25,6 @@ namespace Ludo2
             SetNumberOfPlayers(); //Sets the number of players before the game begins
             CreatePlayers(); //This method creates the players
             CreateField(); //Creates the fields used in the game
-            //GetField(); //DEBUG Uncomment when needed
             GetPlayers();
             this.state = GameState.InPlay; //Changes the gamestate to play since we're actually beginning to play the game
             Turn(); //Begins player one's turn
@@ -41,11 +40,9 @@ namespace Ludo2
             Console.WriteLine(); //makes a blank line
         }
 
-        //Useless..................................................
-        private void MainMenu()
-        {
-            Console.WriteLine("Velkommen til ludo");
-        }
+        //
+        //The initialisation of the game is below
+        //
 
         //Sets the number of players before the game begins
         private void SetNumberOfPlayers()
@@ -138,6 +135,10 @@ namespace Ludo2
                 fields[i] = new Field(i + 1, GameColor.None); //gives the fields the correct data
             }
         }
+
+        //
+        //Begins the gameplay
+        //
 
         //The players turn
         private void Turn()
@@ -257,7 +258,9 @@ namespace Ludo2
 
             int startPos = plr[plrArrayId].GetStartpoint(); //Gets the starting position of each individual player
 
+            //
             //WARNING Nearly no Comments below this point
+            //
 
             if(isUsed == false)
             {

@@ -20,8 +20,17 @@ namespace Ludo2
             this.tokens = tokens;
             this.color = this.tokens[0].GetColor();
             this.startPoint = startPoint;
+            SetTokenStartpoint(startPoint);
         }
 
+        //Single time use
+        private void SetTokenStartpoint(int x)
+        {
+            foreach(Token tk in tokens) //Goes through each token in the token array
+            {
+                tk.SetPosition(x); //Sets the position of each of the tokens
+            }
+        }
         //---------------- Getters ----------------
 
         //Gets the id of the currently selected user
