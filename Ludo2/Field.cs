@@ -58,9 +58,7 @@ namespace Ludo2
         }
 
         //----->>>WARNING<<<-----
-        //BETA
-        //UNSUPPORTED
-        //MAYBE USELESS METHOD
+        //NOT USELESS BUT WILL GET REMOVED LATER (hopefully)
         
         //Checks if there is a token on the field
         public bool IsTokenPlaced()

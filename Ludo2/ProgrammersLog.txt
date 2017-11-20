@@ -12,3 +12,11 @@ I havent fixed it yet but i began optimizing the code so that it would be easier
 30-10-2017 08:36:
 
 I found some more errors which i have begun to fix.
+
+31-10-2017 08:40:
+
+I optimized the code a bit but im still trying to fix the movement
+
+20-11-2017 12:24.
+
+I returned to the ludo game development and found out that the tokens didnt move but only said so

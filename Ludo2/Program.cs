@@ -25,7 +25,7 @@ namespace Ludo2
                 }
             }
             //Main Game Object
-            Game Ludo = new Game();
+            Game Ludo = new Game(); //The only line of code we need for the game to work
 
             Console.Read();
         }
@@ -44,8 +44,8 @@ namespace Ludo2
             Console.WriteLine("\t----- Ludo2 -----\n\n");
             Console.WriteLine("# Ludo2 [ARGUMENTS]\n\n");
             Console.WriteLine("# [ARGUMENTS]\n");
-            Console.WriteLine("# -m or -M --> Plays the game with music");
-            Console.WriteLine("# -h, -H or --help --> Shows this help");
+            Console.WriteLine("# -m or -M  -  Plays the game with music");
+            Console.WriteLine("# -h, -H or --help  -  Shows this help");
         }
     }
 }

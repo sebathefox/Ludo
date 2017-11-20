@@ -26,9 +26,9 @@ namespace Ludo2
         //Single time use
         private void SetTokenStartpoint(int x)
         {
-            foreach(Token tk in tokens) //Goes through each token in the token array
+            foreach(Token tkn in tokens) //Goes through each token in the token array
             {
-                tk.SetPosition(x); //Sets the position of each of the tokens
+                tkn.SetPosition(x); //Sets the position of each of the tokens
             }
         }
         //---------------- Getters ----------------

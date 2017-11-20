@@ -56,7 +56,7 @@ namespace Ludo2
         //Sets the position of the currently selected token
         public void SetPosition(int pos)
         {
-            this.positionId = pos;
+            this.positionId = pos - 1;
         }
     }
 }

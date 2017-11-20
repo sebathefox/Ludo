@@ -31,14 +31,7 @@ namespace Ludo2
         }
 
 
-        //Used to clear the console and write ludo on the top
-        private void Clear()
-        {
-            Console.Clear(); //Clears the console
-            Console.WriteLine("Ludo"); //Writes ludo to the console
-            Console.WriteLine(this.players[plrArrayId].ToString());
-            Console.WriteLine(); //makes a blank line
-        }
+        
 
         //
         //The initialisation of the game is below
@@ -149,10 +142,9 @@ namespace Ludo2
                 Console.WriteLine("Det er " + turn.GetName() + "'s tur"); //Some 'nice' output
                 do
                 {
-                    Console.WriteLine("Tryk 'k' for at kaste med terningen");
+                    Console.Write("Tryk 'k' for at kaste med terningen: ");
                 }
                 while (Console.ReadKey().KeyChar != 'k');
-                //Clear(); //makes the console nicer
                 Console.WriteLine();
                 Console.WriteLine("Du slog: " + die.ThrowDice().ToString());
                 Console.WriteLine();
@@ -183,8 +175,12 @@ namespace Ludo2
                             Console.Write(" - Kan ikke spilles");
                         }
                         break;
-                    default: //If token not home you can move
-                        Console.Write("Kan spilles");
+                    case TokenState.InPlay:
+                        Console.Write(" <- Kan spilles");
+                        choice++;
+                        break;
+                    case TokenState.Safe:
+                        Console.Write(" <- Kan spilles");
                         choice++;
                         break;
                 }
@@ -217,8 +213,6 @@ namespace Ludo2
             }
 
             Console.WriteLine("Skifter spiller");
-            //Thread.Sleep(8000); //Improvised wait Use with care
-            //Clear();
             Turn();
         }
 
@@ -227,7 +221,7 @@ namespace Ludo2
         {
             int tokenToMove = 0; //Only used in this method
 
-            Clear(); //Makes the console look nicer
+            //Clear(); //Makes the console look nicer
             Console.WriteLine("Vælg den brik du vil rykke (Brug et tal fra 1 til 4)");
             while (tokenToMove < 1 || tokenToMove > 4)
             {
@@ -261,6 +255,8 @@ namespace Ludo2
             //
             //WARNING Nearly no Comments below this point
             //
+            //WARNING If any token has moved Then all tokens can move freely
+            //
 
             if(isUsed == false)
             {
@@ -279,19 +275,22 @@ namespace Ludo2
                             plr[plrArrayId].GetToken(tknId).SetPosition(plr[plrArrayId].GetStartpoint());
                         }
                         break;
-                    case (5):
-                        MoveToken(plr, tknId, fieldToMove);
-                        break;
-                    case (4):
-                        MoveToken(plr, tknId, fieldToMove);
-                        break;
-                    case (3):
-                        MoveToken(plr, tknId, fieldToMove);
-                        break;
-                    case (2):
-                        MoveToken(plr, tknId, fieldToMove);
-                        break;
-                    case (1):
+                    //case (5):
+                    //    MoveToken(plr, tknId, fieldToMove);
+                    //    break;
+                    //case (4):
+                    //    MoveToken(plr, tknId, fieldToMove);
+                    //    break;
+                    //case (3):
+                    //    MoveToken(plr, tknId, fieldToMove);
+                    //    break;
+                    //case (2):
+                    //    MoveToken(plr, tknId, fieldToMove);
+                    //    break;
+                    //case (1):
+                    //    MoveToken(plr, tknId, fieldToMove);
+                    //    break;
+                    default:
                         MoveToken(plr, tknId, fieldToMove);
                         break;
                 }
