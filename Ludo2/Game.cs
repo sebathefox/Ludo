@@ -12,7 +12,9 @@ namespace Ludo2
         
         private GameState state; //Defines a gamestate variable
 
-        private int numberOfPlayers; //Defines the number of players in the game
+        bool debug;
+
+        private readonly int numberOfPlayers; //Defines the number of players in the game
         private Player[] players; //defines the array of players
         private int plrArrayId = 0; //Defines the player's turn
         private Field[] fields; //Defines the fields in the game
@@ -22,7 +24,7 @@ namespace Ludo2
         //---------------- Constructor ----------------
         public Game()
         {
-            SetNumberOfPlayers(); //Sets the number of players before the game begins
+            this.numberOfPlayers = SetNumberOfPlayers(); //Sets the number of players before the game begins
             CreatePlayers(); //This method creates the players
             CreateField(); //Creates the fields used in the game
             GetPlayers();
@@ -31,26 +33,29 @@ namespace Ludo2
         }
 
 
-        
-
         //
         //The initialisation of the game is below
         //
 
         //Sets the number of players before the game begins
-        private void SetNumberOfPlayers()
+        private int SetNumberOfPlayers()
         {
+            int players = 0;
+
             Console.Write("Hvor mange spillere?: "); //Asks for how many players there will be in this game
 
-            while(this.numberOfPlayers < 2 || this.numberOfPlayers > 4) //hecks if there is less than 2 or more than 4
+            while(players < 2 || players > 4) //hecks if there is less than 2 or more than 4
             {
-                if (!int.TryParse(Console.ReadKey().KeyChar.ToString(), out this.numberOfPlayers)) //Tries to save the input as 'this.numberOfPlayers'
+                if (!int.TryParse(Console.ReadKey().KeyChar.ToString(), out players)) //Tries to save the input as 'this.numberOfPlayers'
                 {
                     Console.WriteLine(); //Makes a blank space
                     Console.WriteLine("Ugyldig værdi, vælg et tal mellem 2 og 4");
                 }
             }
+            return players;
         }
+
+        //--------------------- DIVIDER ---------------------
 
         //This method creates the players
         private void CreatePlayers()
@@ -69,6 +74,8 @@ namespace Ludo2
                 players[i] = new Player(name, (i + 1), token, startpointAssign); //Defines the players
             }
         }
+
+        //--------------------- DIVIDER ---------------------
 
         //Assigns the tokens -- used in the method above
         private Token[] TokenAssign(int colorIndex)
@@ -95,7 +102,9 @@ namespace Ludo2
             }
             return tokens;
         }
-        
+
+        //--------------------- DIVIDER ---------------------
+
         //Assigns the startpoints used by the different users
         private int StartpointAssignment(int i)
         {
@@ -118,6 +127,8 @@ namespace Ludo2
             return startPoint;
         }
 
+        //--------------------- DIVIDER ---------------------
+
         //Creates the fields used in the game
         private void CreateField()
         {
@@ -125,9 +136,11 @@ namespace Ludo2
 
             for(int i = 0; i < 52; i++)
             {
-                fields[i] = new Field(i + 1, GameColor.None); //gives the fields the correct data
+                fields[i] = new Field(i + 1); //gives the fields the correct data
             }
         }
+
+        //--------------------- DIVIDER ---------------------
 
         //
         //Begins the gameplay
@@ -151,6 +164,8 @@ namespace Ludo2
                 CanIMove(turn.GetTokens()); //Checks if the player can move
             }
         }
+
+        //--------------------- DIVIDER ---------------------
 
         //Checks if the player can move
         private void CanIMove(Token[] tokens)
@@ -199,6 +214,8 @@ namespace Ludo2
             }
         }
 
+        //--------------------- DIVIDER ---------------------
+
         //Changes the turn to the next player
         private void ChangeTurn()
         {
@@ -215,6 +232,8 @@ namespace Ludo2
             Console.WriteLine("Skifter spiller");
             Turn();
         }
+
+        //--------------------- DIVIDER ---------------------
 
         //Lets the player choose the token to move
         private int ChooseTokenToMove()
@@ -233,6 +252,8 @@ namespace Ludo2
             }
             return tokenToMove -1;
         }
+
+        //--------------------- DIVIDER ---------------------
 
         //Moves the token
         private void MoveToField(Player[] plr, int dieRoll)
@@ -253,8 +274,6 @@ namespace Ludo2
             int startPos = plr[plrArrayId].GetStartpoint(); //Gets the starting position of each individual player
 
             //
-            //WARNING Nearly no Comments below this point
-            //
             //WARNING If any token has moved Then all tokens can move freely
             //
 
@@ -266,42 +285,38 @@ namespace Ludo2
                     case (6): //OPTIMIZE
                         if (plr[plrArrayId].GetTokens().Equals(TokenState.InPlay))
                         {
-                            fields[(plr[plrArrayId].GetToken(tknId).GetPosition() + 6)].PlaceToken(plr[plrArrayId].GetToken(tknId),
-                            plr[plrArrayId].GetColor());
+                            debug = fields[(plr[plrArrayId].GetToken(tknId).GetPosition() + 6)].PlaceToken(plr[plrArrayId].GetToken(tknId),
+                            plr[plrArrayId].GetColor(), die.GetValue());
+
+                            plr[plrArrayId].GetToken(tknId).SetPosition(die.GetValue());
                         }
                         else
                         {
-                            fields[startPos].PlaceToken(plr[plrArrayId].GetToken(tknId), plr[plrArrayId].GetColor());
+                            MoveToken(plr, tknId, fieldToMove);
                             plr[plrArrayId].GetToken(tknId).SetPosition(plr[plrArrayId].GetStartpoint());
+
+                            plr[plrArrayId].GetToken(tknId).SetPosition(die.GetValue());
                         }
                         break;
-                    //case (5):
-                    //    MoveToken(plr, tknId, fieldToMove);
-                    //    break;
-                    //case (4):
-                    //    MoveToken(plr, tknId, fieldToMove);
-                    //    break;
-                    //case (3):
-                    //    MoveToken(plr, tknId, fieldToMove);
-                    //    break;
-                    //case (2):
-                    //    MoveToken(plr, tknId, fieldToMove);
-                    //    break;
-                    //case (1):
-                    //    MoveToken(plr, tknId, fieldToMove);
-                    //    break;
                     default:
                         MoveToken(plr, tknId, fieldToMove);
+
+                        plr[plrArrayId].GetToken(tknId).SetPosition(die.GetValue());
                         break;
                 }
+                Console.WriteLine(debug);
             }
         }
+
+        //--------------------- DIVIDER ---------------------
 
         //Moves the token
         private void MoveToken(Player[] plr, int tknId, int fieldToMove)
         {
-            fields[fieldToMove].PlaceToken(plr[plrArrayId].GetToken(tknId), plr[plrArrayId].GetColor());
+            debug = fields[fieldToMove].PlaceToken(plr[plrArrayId].GetToken(tknId), plr[plrArrayId].GetColor(), die.GetValue());
         }
+
+        //--------------------- DIVIDER ---------------------
 
         //---------------- Getters ----------------
 
@@ -315,7 +330,7 @@ namespace Ludo2
         }
         
         //Gets a list of all the fields DEBUG ONLY NOT RELEASE
-        public void GetField()
+        private void GetField()
         {
             foreach(Field fi in this.fields)
             {
