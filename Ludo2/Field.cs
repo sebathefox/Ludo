@@ -41,7 +41,7 @@ namespace Ludo2
                     tokens[0] = token;
                     this.color = token.GetColor();
 
-                    token.SetPosition(fieldId + dieRoll);
+                    token.TokenPosition = fieldId + dieRoll;
 
                     return false;
                 }

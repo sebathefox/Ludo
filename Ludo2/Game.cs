@@ -175,9 +175,9 @@ namespace Ludo2
             Console.WriteLine("Her er dine brikker:");
             foreach(Token tkn in tokens) //Begins to write the tokens of the player
             {
-                Console.Write("Brik nr " + tkn.GetTokenId() + ": er placeret: " + tkn.GetState()); //Writes the id and state of each of the tokens
+                Console.Write("Brik nr " + tkn.GetTokenId() + ": er placeret: " + tkn.TokenState); //Writes the id and state of each of the tokens
 
-                switch(tkn.GetState()) //Begins to check if the player can do anything with his/hers tokens
+                switch(tkn.TokenState) //Begins to check if the player can do anything with his/hers tokens
                 {
                     case TokenState.Home:
                         if(die.GetValue() == 6)
@@ -267,7 +267,7 @@ namespace Ludo2
             int tknId = ChooseTokenToMove();
            // int plrId = players[(numberOfPlayers - 1)].GetId(); //Gets the id of the player
             int plrArrayId = numberOfPlayers - 1; //Instead of writing (plrId - 1) everywhere
-            int fieldToMove = plr[plrArrayId].GetToken(tknId).GetPosition() + die.GetValue(); //Calculates the field to move the token to
+            int fieldToMove = plr[plrArrayId].GetToken(tknId).TokenPosition + die.GetValue(); //Calculates the field to move the token to
 
             bool isUsed = fields[fieldToMove].IsTokenPlaced(); //Checks if there is any tokens
 
@@ -279,29 +279,29 @@ namespace Ludo2
 
             if(isUsed == false)
             {
-                plr[plrArrayId].GetToken(tknId).SetState(TokenState.InPlay);
+                plr[plrArrayId].GetToken(tknId).TokenState = TokenState.InPlay;
                 switch (dieRoll)
                 {
                     case (6): //OPTIMIZE
                         if (plr[plrArrayId].GetTokens().Equals(TokenState.InPlay))
                         {
-                            debug = fields[(plr[plrArrayId].GetToken(tknId).GetPosition() + 6)].PlaceToken(plr[plrArrayId].GetToken(tknId),
+                            debug = fields[(plr[plrArrayId].GetToken(tknId).TokenPosition + 6)].PlaceToken(plr[plrArrayId].GetToken(tknId),
                             plr[plrArrayId].GetColor(), die.GetValue());
 
-                            plr[plrArrayId].GetToken(tknId).SetPosition(die.GetValue());
+                            plr[plrArrayId].GetToken(tknId).TokenPosition = die.GetValue();
                         }
                         else
                         {
                             MoveToken(plr, tknId, fieldToMove);
-                            plr[plrArrayId].GetToken(tknId).SetPosition(plr[plrArrayId].GetStartpoint());
+                            plr[plrArrayId].GetToken(tknId).TokenPosition = plr[plrArrayId].GetStartpoint();
 
-                            plr[plrArrayId].GetToken(tknId).SetPosition(die.GetValue());
+                            plr[plrArrayId].GetToken(tknId).TokenPosition = die.GetValue();
                         }
                         break;
                     default:
                         MoveToken(plr, tknId, fieldToMove);
 
-                        plr[plrArrayId].GetToken(tknId).SetPosition(die.GetValue());
+                        plr[plrArrayId].GetToken(tknId).TokenPosition = die.GetValue();
                         break;
                 }
                 Console.WriteLine(debug);
