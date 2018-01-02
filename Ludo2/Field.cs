@@ -27,6 +27,17 @@ namespace Ludo2
                 {
                     //Make the Kill function to send the enemy token home
                     //Probably KillToken(TokenToKill);
+
+                    if(tokens.Length > 1)
+                    {
+                        KillToken(token); //Kills the token that moved because there was more than 1 enemy token
+                        return false;
+                    }
+                    else if(tokens.Length <= 1)
+                    {
+                        KillToken(this.tokens[1]); //Kills the already placed token
+                    }
+
                     tokens[0] = token;
                     this.color = token.GetColor();
 
@@ -48,9 +59,10 @@ namespace Ludo2
             }
         }
 
-        private void KillToken(Token enemyToken)
+        private void KillToken(Token token)
         {
             //TODO Make The Code To Reset A Token
+            token.SetPosition(token.getStartposition());
         }
 
         //---------------- Getters ----------------

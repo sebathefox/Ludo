@@ -87,16 +87,16 @@ namespace Ludo2
                 switch (colorIndex) //gives the same color to the tokens as the player
                 {
                     case 0:
-                        tokens[i] = new Token((i + 1), GameColor.Yellow); //Defines the color for the token
+                        tokens[i] = new Token((i + 1), GameColor.Yellow, players[i].GetStartpoint()); //Defines the color for the token
                         break;
                     case 1:
-                        tokens[i] = new Token((i + 1), GameColor.Blue); //Defines the color for the token
+                        tokens[i] = new Token((i + 1), GameColor.Blue, players[i].GetStartpoint()); //Defines the color for the token
                         break;
                     case 2:
-                        tokens[i] = new Token((i + 1), GameColor.Red); //Defines the color for the token
+                        tokens[i] = new Token((i + 1), GameColor.Red, players[i].GetStartpoint()); //Defines the color for the token
                         break;
                     case 3:
-                        tokens[i] = new Token((i + 1), GameColor.Green); //Defines the color for the token
+                        tokens[i] = new Token((i + 1), GameColor.Green, players[i].GetStartpoint()); //Defines the color for the token
                         break;
                 }
             }
