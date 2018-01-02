@@ -28,7 +28,7 @@ namespace Ludo2
         {
             foreach(Token tkn in tokens) //Goes through each token in the token array
             {
-                tkn.SetPosition(x); //Sets the position of each of the tokens
+                tkn.TokenPosition = x; //Sets the position of each of the tokens
             }
         }
         //---------------- Getters ----------------

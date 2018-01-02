@@ -35,28 +35,17 @@ namespace Ludo2
             return this.color;
         }
 
-        //Gets the state of the currently selected token
-        public TokenState GetState()
+        public TokenState TokenState
         {
-            return this.state;
+            get => state;
+            set => state = value;
         }
 
-        //Sets the state of the currently selected token
-        public void SetState(TokenState ts)
-        {
-            this.state = ts;
-        }
+        public int TokenPosition
+            {
+            get => positionId;
+            set => positionId = value;
+            }
 
-        //Gets the position of the currently selected token
-        public int GetPosition()
-        {
-            return positionId;
-        }
-
-        //Sets the position of the currently selected token
-        public void SetPosition(int pos)
-        {
-            this.positionId = pos;
-        }
     }
 }
