@@ -11,7 +11,9 @@ namespace Ludo2
         private readonly GameColor color; // the color of the player
         private readonly int startPoint; //Where to begin from in the field array
 
-        //---------------- Constructor ----------------
+        /// <summary>
+        /// Creates a new Player object that can be used in the game
+        /// </summary>
         public Player(string name, int playerId, Token[] tokens, int startPoint)
         {
             //Self explanatory
@@ -33,37 +35,49 @@ namespace Ludo2
         }
         //---------------- Getters ----------------
 
-        //Gets the id of the currently selected user
+        /// <summary>
+        /// Gets the id of the player object
+        /// </summary>
         public int GetId() 
         {
             return this.playerId;
         }
 
-        //Gets the name of the currently selected user
+        /// <summary>
+        /// Gets the name of the player object
+        /// </summary>
         public string GetName()
         {
             return this.name;
         }
 
-        //Gets the color of the currently selected user
+        /// <summary>
+        /// Gets the color of the player object
+        /// </summary>
         public GameColor GetColor()
         {
                 return this.color;
         }
 
-        //Gets the tokens of the currently selected user
+        /// <summary>
+        /// Gets the array with the players tokens
+        /// </summary>
         public Token[] GetTokens()
         {
             return this.tokens;
         }
 
-        //Gets a single token from the currently selected user
+        /// <summary>
+        /// Gets a single array from the token array
+        /// </summary>
         public Token GetToken(int tknid)
         {
             return this.tokens[tknid];
         }
 
-        //Gets the startpoint of the currently selected user
+        /// <summary>
+        /// Gets the startpoint Do NOT Work~
+        /// </summary>
         public int GetStartpoint()
         {
             return this.startPoint;

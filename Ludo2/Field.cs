@@ -8,7 +8,7 @@ namespace Ludo2
     {
         private GameColor color; //used if there is a token on the field
         private readonly int fieldId; //Every field needs an id
-        private Token[] tokens = new Token[2]; //creates an array to hold up to two tokens at the same time
+        private Token[] tokens = new Token[4]; //creates an array to hold up to two tokens at the same time
 
         //---------------- Constructor ----------------
         public Field(int fieldId, GameColor color = GameColor.None)
@@ -25,8 +25,7 @@ namespace Ludo2
             {
                 if(token.GetColor() != this.color) //FIX Tokens will currently always return false when trying to move
                 {
-                    //Make the Kill function to send the enemy token home
-                    //Probably KillToken(TokenToKill);
+                    //TODO Make the Kill function to send the enemy token home
 
                     if(tokens.Length > 1)
                     {
@@ -59,10 +58,21 @@ namespace Ludo2
             }
         }
 
+        public void RemoveToken(Token token)
+        {
+
+        }
+
         private void KillToken(Token token)
         {
-            //TODO Make The Code To Reset A Token
-            token.SetPosition(token.getStartposition());
+            MusicHandler.DeathSound();
+            RemoveToken(token);
+
+            this.color = GameColor.None;
+            for (int i = 0; i < this.tokens.Length; i++)
+            {
+                this.tokens[i] = null;
+            }
         }
 
         //---------------- Getters ----------------
@@ -79,9 +89,7 @@ namespace Ludo2
             return this.fieldId;
         }
 
-        //----->>>WARNING<<<-----
-        //NOT USELESS BUT WILL GET REMOVED LATER (hopefully)
-        
+        //HACK Not The Best
         //Checks if there is a token on the field
         public bool IsTokenPlaced()
         {

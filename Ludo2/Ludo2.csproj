@@ -60,9 +60,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Beautify.cs" />
+    <Compile Include="Design.cs" />
     <Compile Include="Dice.cs" />
     <Compile Include="Field.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="MusicHandler.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

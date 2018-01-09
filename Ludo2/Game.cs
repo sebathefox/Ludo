@@ -12,7 +12,7 @@ namespace Ludo2
         
         private GameState state; //Defines a gamestate variable
 
-        bool debug;
+        bool hasMoveSucceded;
 
         private readonly int numberOfPlayers; //Defines the number of players in the game
         private Player[] players; //defines the array of players
@@ -24,6 +24,8 @@ namespace Ludo2
         //---------------- Constructor ----------------
         public Game()
         {
+            //MusicHandler.DeathSound();
+
             this.numberOfPlayers = SetNumberOfPlayers(); //Sets the number of players before the game begins
             CreatePlayers(); //This method creates the players
             CreateField(); //Creates the fields used in the game
@@ -40,19 +42,19 @@ namespace Ludo2
         //Sets the number of players before the game begins
         private int SetNumberOfPlayers()
         {
-            int players = 0;
+            int numOfPlayers = 0;
 
             Console.Write("Hvor mange spillere?: "); //Asks for how many players there will be in this game
 
-            while(players < 2 || players > 4) //hecks if there is less than 2 or more than 4
+            while(numOfPlayers < 2 || numOfPlayers > 4) //hecks if there is less than 2 or more than 4
             {
-                if (!int.TryParse(Console.ReadKey().KeyChar.ToString(), out players)) //Tries to save the input as 'this.numberOfPlayers'
+                if (!int.TryParse(Console.ReadKey().KeyChar.ToString(), out numOfPlayers)) //Tries to save the input as 'this.numberOfPlayers'
                 {
                     Console.WriteLine(); //Makes a blank space
                     Console.WriteLine("Ugyldig værdi, vælg et tal mellem 2 og 4");
                 }
             }
-            return players;
+            return numOfPlayers;
         }
 
         //--------------------- DIVIDER ---------------------
@@ -77,42 +79,13 @@ namespace Ludo2
 
         //--------------------- DIVIDER ---------------------
 
-        //Assigns the tokens -- used in the method above
-        private Token[] TokenAssign(int colorIndex)
-        {
-            Token[] tokens = new Token[4]; //Makes a new array
-
-            for (int i = 0; i <= 3; i++) //runs four times
-            {
-                switch (colorIndex) //gives the same color to the tokens as the player
-                {
-                    case 0:
-                        tokens[i] = new Token((i + 1), GameColor.Yellow, players[i].GetStartpoint()); //Defines the color for the token
-                        break;
-                    case 1:
-                        tokens[i] = new Token((i + 1), GameColor.Blue, players[i].GetStartpoint()); //Defines the color for the token
-                        break;
-                    case 2:
-                        tokens[i] = new Token((i + 1), GameColor.Red, players[i].GetStartpoint()); //Defines the color for the token
-                        break;
-                    case 3:
-                        tokens[i] = new Token((i + 1), GameColor.Green, players[i].GetStartpoint()); //Defines the color for the token
-                        break;
-                }
-            }
-            return tokens;
-        }
-
-        //--------------------- DIVIDER ---------------------
-
-        //Assigns the startpoints used by the different users
         private int StartpointAssignment(int i)
         {
             int startPoint = 0; //the startpoint used by the player
             switch (i)
             {
                 case 0:
-                    startPoint = 0; //Startpoints is calculated like an array AKA begins with 0
+                    startPoint = 0;
                     break;
                 case 1:
                     startPoint = 13;
@@ -125,6 +98,34 @@ namespace Ludo2
                     break;
             }
             return startPoint;
+        }
+
+        //--------------------- DIVIDER ---------------------
+
+        //Assigns the tokens -- used in the method above
+        private Token[] TokenAssign(int colorIndex)
+        {
+            Token[] tokens = new Token[4]; //Makes a new array
+
+            for (int i = 0; i <= 3; i++) //runs four times
+            {
+                switch (colorIndex) //gives the same color to the tokens as the player
+                {
+                    case 0:
+                        tokens[i] = new Token((i + 1), GameColor.Yellow); //Defines the color for the token
+                        break;
+                    case 1:
+                        tokens[i] = new Token((i + 1), GameColor.Blue); //Defines the color for the token
+                        break;
+                    case 2:
+                        tokens[i] = new Token((i + 1), GameColor.Red); //Defines the color for the token
+                        break;
+                    case 3:
+                        tokens[i] = new Token((i + 1), GameColor.Green); //Defines the color for the token
+                        break;
+                }
+            }
+            return tokens;
         }
 
         //--------------------- DIVIDER ---------------------
@@ -142,11 +143,7 @@ namespace Ludo2
 
         //--------------------- DIVIDER ---------------------
 
-        //
-        //Begins the gameplay
-        //
-
-        //The players turn
+        //Each players turn
         private void Turn()
         {
             while(state == GameState.InPlay) //Checks if the game is on
@@ -255,6 +252,8 @@ namespace Ludo2
 
         //--------------------- DIVIDER ---------------------
 
+        //REWRITE Token Move Method
+
         //Moves the token
         private void MoveToField(Player[] plr, int dieRoll)
         {
@@ -265,7 +264,6 @@ namespace Ludo2
             }
 
             int tknId = ChooseTokenToMove();
-           // int plrId = players[(numberOfPlayers - 1)].GetId(); //Gets the id of the player
             int plrArrayId = numberOfPlayers - 1; //Instead of writing (plrId - 1) everywhere
             int fieldToMove = plr[plrArrayId].GetToken(tknId).TokenPosition + die.GetValue(); //Calculates the field to move the token to
 
@@ -277,15 +275,20 @@ namespace Ludo2
             //WARNING If any token has moved Then all tokens can move freely
             //
 
-            if(isUsed == false)
+            if(!isUsed)
             {
                 plr[plrArrayId].GetToken(tknId).TokenState = TokenState.InPlay;
                 switch (dieRoll)
                 {
                     case (6): //OPTIMIZE
+                        /*if (plr[plrArrayId].GetToken(tknId).TokenState != TokenState.InPlay)
+                        {
+
+                        }*/
+
                         if (plr[plrArrayId].GetTokens().Equals(TokenState.InPlay))
                         {
-                            debug = fields[(plr[plrArrayId].GetToken(tknId).TokenPosition + 6)].PlaceToken(plr[plrArrayId].GetToken(tknId),
+                            hasMoveSucceded = fields[(plr[plrArrayId].GetToken(tknId).TokenPosition + 6)].PlaceToken(plr[plrArrayId].GetToken(tknId),
                             plr[plrArrayId].GetColor(), die.GetValue());
 
                             plr[plrArrayId].GetToken(tknId).TokenPosition = die.GetValue();
@@ -295,16 +298,28 @@ namespace Ludo2
                             MoveToken(plr, tknId, fieldToMove);
                             plr[plrArrayId].GetToken(tknId).TokenPosition = plr[plrArrayId].GetStartpoint();
 
-                            plr[plrArrayId].GetToken(tknId).TokenPosition = die.GetValue();
+                            plr[plrArrayId].GetToken(tknId).TokenPosition = plr[plrArrayId].GetStartpoint() + die.GetValue();
                         }
                         break;
                     default:
+
+                        //TODO FIX CODE BELOW??? ------------------------------
+
+                        if (plr[plrArrayId].GetToken(tknId).TokenState != TokenState.InPlay)
+                        {
+
+                        
                         MoveToken(plr, tknId, fieldToMove);
 
                         plr[plrArrayId].GetToken(tknId).TokenPosition = die.GetValue();
+                        }
+                        else
+                        {
+                            Console.WriteLine("This Token Can't move.");
+                        }
                         break;
                 }
-                Console.WriteLine(debug);
+                Console.WriteLine(hasMoveSucceded);
             }
         }
 
@@ -313,14 +328,10 @@ namespace Ludo2
         //Moves the token
         private void MoveToken(Player[] plr, int tknId, int fieldToMove)
         {
-            debug = fields[fieldToMove].PlaceToken(plr[plrArrayId].GetToken(tknId), plr[plrArrayId].GetColor(), die.GetValue());
+            hasMoveSucceded = fields[fieldToMove].PlaceToken(plr[plrArrayId].GetToken(tknId), plr[plrArrayId].GetColor(), die.GetValue());
         }
 
-        //--------------------- DIVIDER ---------------------
-
-        //---------------- Getters ----------------
-
-        //Gets a lisst of all the players
+        //Gets a list of all the players
         private void GetPlayers()
         {
             foreach(Player pl in players)
