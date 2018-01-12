@@ -29,7 +29,7 @@ namespace Ludo2
             this.numberOfPlayers = SetNumberOfPlayers(); //Sets the number of players before the game begins
             CreatePlayers(); //This method creates the players
             CreateField(); //Creates the fields used in the game
-            GetPlayers();
+            GetPlayers(); //Debug
             this.state = GameState.InPlay; //Changes the gamestate to play since we're actually beginning to play the game
             Turn(); //Begins player one's turn
         }
@@ -51,7 +51,7 @@ namespace Ludo2
                 if (!int.TryParse(Console.ReadKey().KeyChar.ToString(), out numOfPlayers)) //Tries to save the input as 'this.numberOfPlayers'
                 {
                     Console.WriteLine(); //Makes a blank space
-                    Console.WriteLine("Ugyldig værdi, vælg et tal mellem 2 og 4");
+                    Console.WriteLine("Ugyldig værdi, vælg et tal mellem 2 og 4\n");
                 }
             }
             return numOfPlayers;
@@ -73,7 +73,7 @@ namespace Ludo2
                 int startpointAssign = StartpointAssignment(i); //Assigns the startpoint for each of the users
                 Token[] token = TokenAssign(i); //Assigns the tokens for the different users
 
-                players[i] = new Player(name, (i + 1), token, startpointAssign); //Defines the players
+                players[i] = new Player(name, (i + 1), token, token[i].StartPosition); //Defines the players
             }
         }
 
@@ -109,19 +109,23 @@ namespace Ludo2
 
             for (int i = 0; i <= 3; i++) //runs four times
             {
+                //HACK TEMPORARY
+
+                int startPos = StartpointAssignment(i);
+
                 switch (colorIndex) //gives the same color to the tokens as the player
                 {
                     case 0:
-                        tokens[i] = new Token((i + 1), GameColor.Yellow); //Defines the color for the token
+                        tokens[i] = new Token((i + 1), GameColor.Yellow, startPos); //Defines the color for the token
                         break;
                     case 1:
-                        tokens[i] = new Token((i + 1), GameColor.Blue); //Defines the color for the token
+                        tokens[i] = new Token((i + 1), GameColor.Blue, startPos); //Defines the color for the token
                         break;
                     case 2:
-                        tokens[i] = new Token((i + 1), GameColor.Red); //Defines the color for the token
+                        tokens[i] = new Token((i + 1), GameColor.Red, startPos); //Defines the color for the token
                         break;
                     case 3:
-                        tokens[i] = new Token((i + 1), GameColor.Green); //Defines the color for the token
+                        tokens[i] = new Token((i + 1), GameColor.Green, startPos); //Defines the color for the token
                         break;
                 }
             }
@@ -149,7 +153,7 @@ namespace Ludo2
             while(state == GameState.InPlay) //Checks if the game is on
             {
                 Player turn = players[(plrArrayId)]; //Finds the player in the array
-                Console.WriteLine("Det er " + turn.GetName() + "'s tur"); //Some 'nice' output
+                Console.WriteLine("Det er " + turn.GetName() + "'s tur\n"); //Some 'nice' output
                 do
                 {
                     Console.Write("Tryk 'k' for at kaste med terningen: ");
@@ -169,10 +173,10 @@ namespace Ludo2
         {
             int choice = 0; //How many tokens can the player move
 
-            Console.WriteLine("Her er dine brikker:");
+            Console.WriteLine("Her er dine brikker:\n");
             foreach(Token tkn in tokens) //Begins to write the tokens of the player
             {
-                Console.Write("Brik nr " + tkn.GetTokenId() + ": er placeret: " + tkn.TokenState); //Writes the id and state of each of the tokens
+                Console.Write("Brik nr: " + tkn.GetTokenId() + "   er placeret: " + tkn.TokenState); //Writes the id and state of each of the tokens
 
                 switch(tkn.TokenState) //Begins to check if the player can do anything with his/hers tokens
                 {
@@ -199,7 +203,7 @@ namespace Ludo2
                 Console.WriteLine();
             }
             Console.WriteLine();
-            Console.WriteLine("Du har " + choice.ToString() + " muligheder i den her tur");
+            Console.WriteLine("Du har " + choice.ToString() + " muligheder i den her tur\n");
 
             if(choice == 0) //Cant do anything this turn skips the player
             {
@@ -226,7 +230,7 @@ namespace Ludo2
                 plrArrayId++;
             }
 
-            Console.WriteLine("Skifter spiller");
+            Console.WriteLine("Skifter spiller\n");
             Turn();
         }
 

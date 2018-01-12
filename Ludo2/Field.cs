@@ -8,7 +8,7 @@ namespace Ludo2
     {
         private GameColor color; //used if there is a token on the field
         private readonly int fieldId; //Every field needs an id
-        private Token[] tokens = new Token[4]; //creates an array to hold up to two tokens at the same time
+        private Token[] tokens = new Token[4]; //creates an array to hold up to four tokens at the same time
 
         //---------------- Constructor ----------------
         public Field(int fieldId, GameColor color = GameColor.None)
@@ -23,7 +23,7 @@ namespace Ludo2
         {
             if(tokens.Any()) //checks if there is any tokens on the field
             {
-                if(token.GetColor() != this.color) //FIX Tokens will currently always return false when trying to move
+                if(token.GetColor() != this.color) //REWRITE Tokens will currently always return false when trying to move
                 {
                     //TODO Make the Kill function to send the enemy token home
 
@@ -35,16 +35,17 @@ namespace Ludo2
                     else if(tokens.Length <= 1)
                     {
                         KillToken(this.tokens[1]); //Kills the already placed token
+
+                        tokens[0] = token;
+                        this.color = token.GetColor();
+
+                        token.TokenPosition = fieldId + dieRoll;
+
+                        return true;
                     }
-
-                    tokens[0] = token;
-                    this.color = token.GetColor();
-
-                    token.TokenPosition = fieldId + dieRoll;
-
                     return false;
                 }
-                else
+                else //No tokens found
                 {
                     tokens[1] = token; //Insert the token into the array
                     return true;
@@ -58,21 +59,23 @@ namespace Ludo2
             }
         }
 
-        public void RemoveToken(Token token)
+        public void RemoveToken()
         {
+            MusicHandler.DeathSound();
 
+            this.color = GameColor.None;
+            for (int i = 0; i < (this.tokens.Length - 1); i++)
+            {
+                this.tokens[i] = null;
+            }
         }
 
         private void KillToken(Token token)
         {
-            MusicHandler.DeathSound();
-            RemoveToken(token);
+            RemoveToken();
 
-            this.color = GameColor.None;
-            for (int i = 0; i < this.tokens.Length; i++)
-            {
-                this.tokens[i] = null;
-            }
+            token.TokenPosition = token.StartPosition;
+            token.TokenState = TokenState.Home;
         }
 
         //---------------- Getters ----------------
@@ -89,7 +92,7 @@ namespace Ludo2
             return this.fieldId;
         }
 
-        //HACK Not The Best
+        //HACK Not The Best I Think
         //Checks if there is a token on the field
         public bool IsTokenPlaced()
         {

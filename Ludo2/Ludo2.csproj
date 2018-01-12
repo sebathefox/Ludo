@@ -59,7 +59,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Beautify.cs" />
     <Compile Include="Design.cs" />
     <Compile Include="Dice.cs" />
     <Compile Include="Field.cs" />

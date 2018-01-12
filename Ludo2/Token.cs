@@ -10,17 +10,17 @@ namespace Ludo2
         private readonly int tokenId; // the unique id of the token
         private readonly GameColor color; //The color of the token
         private TokenState state; //Defines if the token is Home, safe or in play
-        private int positionId = 0; //defines the position of the tokens //FIX needs better definition...
-        /*private readonly int startPos;*/
+        private int positionId = 0; //defines the position of the tokens
+        private readonly int startPosition = 0;
 
         //---------------- Constructor ----------------
-        public Token(int tokenId, GameColor color/*, int startPos*/)
+        public Token(int tokenId, GameColor color, int startPos)
         {
             //Self explanatory
             this.tokenId = tokenId;
             this.color = color;
             this.state = TokenState.Home; //sets the default state to 'Home'
-            //this.startPos = startPos;
+            this.startPosition = startPos;
         }
 
         //---------------- Getters ----------------
@@ -37,11 +37,6 @@ namespace Ludo2
             return this.color;
         }
 
-        /*public int TokenStart
-        {
-            get => startPos;
-        }*/
-
         public TokenState TokenState
         {
             get => state;
@@ -53,6 +48,11 @@ namespace Ludo2
             get => positionId;
             set => positionId = value;
             }
+
+        public int StartPosition
+        {
+            get => startPosition;
+        }
 
     }
 }
