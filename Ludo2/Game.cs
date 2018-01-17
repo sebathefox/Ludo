@@ -70,7 +70,7 @@ namespace Ludo2
                 Console.Write("Hvad hedder spiller {0}: ", (i+1)); //Asks for the players name
                 string name = Console.ReadLine(); //saves the name as a temporary variable called 'name'
 
-                int startpointAssign = StartpointAssignment(i); //Assigns the startpoint for each of the users
+                //int startpointAssign = StartpointAssignment(i); //Assigns the startpoint for each of the users
                 Token[] token = TokenAssign(i); //Assigns the tokens for the different users
 
                 players[i] = new Player(name, (i + 1), token, token[i].StartPosition); //Defines the players
@@ -103,17 +103,19 @@ namespace Ludo2
         //--------------------- DIVIDER ---------------------
 
         //Assigns the tokens -- used in the method above
-        private Token[] TokenAssign(int colorIndex)
+        private Token[] TokenAssign(int index)
         {
             Token[] tokens = new Token[4]; //Makes a new array
+
+            int startPos = StartpointAssignment(index);
 
             for (int i = 0; i <= 3; i++) //runs four times
             {
                 //HACK TEMPORARY
 
-                int startPos = StartpointAssignment(i);
+                
 
-                switch (colorIndex) //gives the same color to the tokens as the player
+                switch (index) //gives the same color to the tokens as the player
                 {
                     case 0:
                         tokens[i] = new Token((i + 1), GameColor.Yellow, startPos); //Defines the color for the token
@@ -192,11 +194,11 @@ namespace Ludo2
                         }
                         break;
                     case TokenState.InPlay:
-                        Console.Write(" <- Kan spilles");
+                        Console.Write(" <- Kan spilles : " + tkn.TokenPosition + " ");
                         choice++;
                         break;
                     case TokenState.Safe:
-                        Console.Write(" <- Kan spilles");
+                        Console.Write(" <- Kan spilles : " + tkn.TokenPosition + " ");
                         choice++;
                         break;
                 }
@@ -264,7 +266,7 @@ namespace Ludo2
 
             foreach(Player pl in plr)
             {
-                Console.WriteLine(pl.GetName() + " " + pl.GetId());
+                Console.WriteLine("Spiller: " + pl.GetName() + " " + pl.GetId());
             }
 
             int tknId = ChooseTokenToMove();

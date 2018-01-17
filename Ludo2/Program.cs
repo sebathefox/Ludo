@@ -24,13 +24,13 @@ namespace Ludo2
         }
 
         //Shows the possible commandline arguments for this program
-        static void Help()
-        {
-            Console.WriteLine("\t----- Ludo2 -----\n\n");
-            Console.WriteLine("# Ludo2 [ARGUMENTS]\n\n");
-            Console.WriteLine("# [ARGUMENTS]\n");
-            Console.WriteLine("# -m or -M  -  Plays the game with music");
-            Console.WriteLine("# -h, -H or --help  -  Shows this help");
-        }
+        //static void Help()
+        //{
+        //    Console.WriteLine("\t----- Ludo2 -----\n\n");
+        //    Console.WriteLine("# Ludo2 [ARGUMENTS]\n\n");
+        //    Console.WriteLine("# [ARGUMENTS]\n");
+        //    Console.WriteLine("# -m or -M  -  Plays the game with music");
+        //    Console.WriteLine("# -h, -H or --help  -  Shows this help");
+        //}
     }
 }

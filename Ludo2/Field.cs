@@ -21,47 +21,52 @@ namespace Ludo2
         //Places the token on the field
         public bool PlaceToken(Token token, GameColor color, int dieRoll)
         {
-            if(tokens.Any()) //checks if there is any tokens on the field
-            {
-                if(token.GetColor() != this.color) //REWRITE Tokens will currently always return false when trying to move
-                {
-                    //TODO Make the Kill function to send the enemy token home
+            //(tokens.Any()) //checks if there is any tokens on the field
+            //{
+                //REWRITE Tokens will currently always return false when trying to move
 
-                    if(tokens.Length > 1)
+                    if (tokens.Length > 1)
                     {
-                        KillToken(token); //Kills the token that moved because there was more than 1 enemy token
-                        return false;
+                        if (token.GetColor() != this.color)
+                        {
+
+                            KillToken(token); //Kills the token that moved because there was more than 1 enemy token
+                            return false;
+                        }
                     }
-                    else if(tokens.Length <= 1)
+                    else if (tokens.Length <= 1)
                     {
-                        KillToken(this.tokens[1]); //Kills the already placed token
+                        if (token.GetColor() != this.color)
+                        {
+                            KillToken(this.tokens[0]); //Kills the already placed token
 
+                            tokens[0] = token;
+                            this.color = token.GetColor();
+
+                            token.TokenPosition = this.fieldId; //HACK TESTZZZ
+
+                            return true;
+                        }
+                        else
+                        {
+                            
+                        }
+                    }
+                    else //No tokens found
+                    {
                         tokens[0] = token;
                         this.color = token.GetColor();
-
-                        token.TokenPosition = fieldId + dieRoll;
-
                         return true;
                     }
-                    return false;
-                }
-                else //No tokens found
-                {
-                    tokens[1] = token; //Insert the token into the array
-                    return true;
-                }
-            }
-            else //No tokens found
-            {
-                tokens[0] = token;
-                this.color = token.GetColor();
-                return true;
-            }
+                return false;
+
+            //}
+            
         }
 
         public void RemoveToken()
         {
-            MusicHandler.DeathSound();
+            //MusicHandler.DeathSound();
 
             this.color = GameColor.None;
             for (int i = 0; i < (this.tokens.Length - 1); i++)
