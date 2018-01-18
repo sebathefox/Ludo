@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Ludo2
 {
-    public enum TokenState { Home, InPlay, Safe }; //Used to define if the token is on the main gameboard
+    public enum TokenState { Home, InPlay, Safe, Finished }; //Used to define if the token is on the main gameboard
 
     public class Token
     {

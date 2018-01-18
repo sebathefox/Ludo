@@ -111,10 +111,6 @@ namespace Ludo2
 
             for (int i = 0; i <= 3; i++) //runs four times
             {
-                //HACK TEMPORARY
-
-                
-
                 switch (index) //gives the same color to the tokens as the player
                 {
                     case 0:
@@ -214,6 +210,7 @@ namespace Ludo2
             else
             {
                 MoveToField(players , die.GetValue());
+                ChangeTurn();
             }
         }
 
@@ -273,26 +270,13 @@ namespace Ludo2
             int plrArrayId = numberOfPlayers - 1; //Instead of writing (plrId - 1) everywhere
             int fieldToMove = plr[plrArrayId].GetToken(tknId).TokenPosition + die.GetValue(); //Calculates the field to move the token to
 
-            bool isUsed = fields[fieldToMove].IsTokenPlaced(); //Checks if there is any tokens
-
             int startPos = plr[plrArrayId].GetStartpoint(); //Gets the starting position of each individual player
 
-            //
-            //WARNING If any token has moved Then all tokens can move freely
-            //
-
-            if(!isUsed)
-            {
                 plr[plrArrayId].GetToken(tknId).TokenState = TokenState.InPlay;
                 switch (dieRoll)
                 {
                     case (6): //OPTIMIZE
-                        /*if (plr[plrArrayId].GetToken(tknId).TokenState != TokenState.InPlay)
-                        {
-
-                        }*/
-
-                        if (plr[plrArrayId].GetTokens().Equals(TokenState.InPlay))
+                        if (plr[plrArrayId].GetToken(tknId).Equals(TokenState.InPlay))
                         {
                             hasMoveSucceded = fields[(plr[plrArrayId].GetToken(tknId).TokenPosition + 6)].PlaceToken(plr[plrArrayId].GetToken(tknId),
                             plr[plrArrayId].GetColor(), die.GetValue());
@@ -311,13 +295,13 @@ namespace Ludo2
 
                         //TODO FIX CODE BELOW??? ------------------------------
 
-                        if (plr[plrArrayId].GetToken(tknId).TokenState != TokenState.InPlay)
+                        if (plr[plrArrayId].GetToken(tknId).TokenState == TokenState.InPlay)
                         {
 
                         
                         MoveToken(plr, tknId, fieldToMove);
 
-                        plr[plrArrayId].GetToken(tknId).TokenPosition = die.GetValue();
+                        plr[plrArrayId].GetToken(tknId).TokenPosition += die.GetValue();
                         }
                         else
                         {
@@ -325,8 +309,7 @@ namespace Ludo2
                         }
                         break;
                 }
-                Console.WriteLine(hasMoveSucceded);
-            }
+                Console.WriteLine("\n" + hasMoveSucceded);
         }
 
         //--------------------- DIVIDER ---------------------

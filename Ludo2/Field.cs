@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Ludo2
 {
@@ -8,7 +9,10 @@ namespace Ludo2
     {
         private GameColor color; //used if there is a token on the field
         private readonly int fieldId; //Every field needs an id
-        private Token[] tokens = new Token[4]; //creates an array to hold up to four tokens at the same time
+        private List<Token> tokensList = new List<Token>(); //creates an List to hold up to four tokens at the same time
+
+
+
 
         //---------------- Constructor ----------------
         public Field(int fieldId, GameColor color = GameColor.None)
@@ -21,57 +25,74 @@ namespace Ludo2
         //Places the token on the field
         public bool PlaceToken(Token token, GameColor color, int dieRoll)
         {
-            //(tokens.Any()) //checks if there is any tokens on the field
-            //{
-                //REWRITE Tokens will currently always return false when trying to move
+            if (tokensList.Count > 1)
+            {
 
-                    if (tokens.Length > 1)
-                    {
-                        if (token.GetColor() != this.color)
-                        {
+                Console.WriteLine("LENGTH: " + tokensList.Count);
+                Console.WriteLine("ANY: " + tokensList.Any());
+                Console.WriteLine("COUNT: " + tokensList.Count());
 
-                            KillToken(token); //Kills the token that moved because there was more than 1 enemy token
-                            return false;
-                        }
-                    }
-                    else if (tokens.Length <= 1)
-                    {
-                        if (token.GetColor() != this.color)
-                        {
-                            KillToken(this.tokens[0]); //Kills the already placed token
+                if (token.GetColor() != this.color)
+                {
 
-                            tokens[0] = token;
-                            this.color = token.GetColor();
+                    KillToken(token); //Kills the token that moved because there was more than 1 enemy token
+                    Console.WriteLine("ERROR: Field.cs, LINE: 32?");
+                    return false;
+                }
+                else
+                {
+                    tokensList.Add(token);
 
-                            token.TokenPosition = this.fieldId; //HACK TESTZZZ
+                    Console.WriteLine("ERROR: Field.cs, LINE: 39?");
+                    return true;
+                }
+            }
+            else if (tokensList.Count < 0)
+            {
+                /*if (tokensList.Any())
+                {
+                    tokensList.Add(token);
+                    this.color = token.GetColor();
+                    Console.WriteLine("ERROR: Field.cs, LINE: 66?");
+                    return true;
+                }
+                else */if (token.GetColor() != this.color)
+                {
+                    //Console.WriteLine();
 
-                            return true;
-                        }
-                        else
-                        {
-                            
-                        }
-                    }
-                    else //No tokens found
-                    {
-                        tokens[0] = token;
-                        this.color = token.GetColor();
-                        return true;
-                    }
-                return false;
+                    KillToken(this.tokensList.ElementAt(0)); //Kills the already placed token
 
-            //}
-            
+                    tokensList.Add(token);
+                    this.color = token.GetColor();
+                    tokensList.RemoveAt(0);
+
+                    token.TokenPosition = this.fieldId; //HACK TESTZZZ
+
+                    Console.WriteLine("ERROR: Field.cs, LINE: 54?");
+                    return true;
+                }
+                //else
+                //{
+
+                //}
+            }
+            else //No tokens found
+            {
+                tokensList.Add(token);
+                this.color = token.GetColor();
+                Console.WriteLine("ERROR: Field.cs, LINE: 66?");
+                return true;
+            }
+        Console.WriteLine("ERROR: Field.cs, LINE: 69?");
+        return false;
         }
 
         public void RemoveToken()
         {
-            //MusicHandler.DeathSound();
-
             this.color = GameColor.None;
-            for (int i = 0; i < (this.tokens.Length - 1); i++)
+            for (int i = 0; i < (this.tokensList.Count - 1); i++)
             {
-                this.tokens[i] = null;
+                this.tokensList[i] = null;
             }
         }
 
@@ -79,12 +100,14 @@ namespace Ludo2
         {
             RemoveToken();
 
+            //MusicHandler.DeathSound();
+
             token.TokenPosition = token.StartPosition;
             token.TokenState = TokenState.Home;
         }
 
         //---------------- Getters ----------------
-        
+
         //Gets the color of the field
         public GameColor GetFieldColor()
         {
@@ -95,19 +118,6 @@ namespace Ludo2
         public int GetFieldId()
         {
             return this.fieldId;
-        }
-
-        //HACK Not The Best I Think
-        //Checks if there is a token on the field
-        public bool IsTokenPlaced()
-        {
-            switch(color)
-            {
-                case (GameColor.None):
-                    return false;
-                default:
-                    return true;
-            }
         }
     }
 }
