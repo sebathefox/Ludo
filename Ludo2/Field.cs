@@ -25,6 +25,11 @@ namespace Ludo2
         //Places the token on the field
         public bool PlaceToken(Token token, GameColor color, int dieRoll)
         {
+            if (token.TokenState == TokenState.Safe)
+            {
+                //TODO make innerFields move method
+            }
+
             if (tokensList.Count > 1)
             {
 
@@ -36,54 +41,34 @@ namespace Ludo2
                 {
 
                     KillToken(token); //Kills the token that moved because there was more than 1 enemy token
-                    Console.WriteLine("ERROR: Field.cs, LINE: 32?");
                     return false;
                 }
                 else
                 {
                     tokensList.Add(token);
-
-                    Console.WriteLine("ERROR: Field.cs, LINE: 39?");
                     return true;
                 }
             }
             else if (tokensList.Count < 0)
             {
-                /*if (tokensList.Any())
+                if (token.GetColor() != this.color)
                 {
-                    tokensList.Add(token);
-                    this.color = token.GetColor();
-                    Console.WriteLine("ERROR: Field.cs, LINE: 66?");
-                    return true;
-                }
-                else */if (token.GetColor() != this.color)
-                {
-                    //Console.WriteLine();
-
                     KillToken(this.tokensList.ElementAt(0)); //Kills the already placed token
 
                     tokensList.Add(token);
                     this.color = token.GetColor();
                     tokensList.RemoveAt(0);
 
-                    token.TokenPosition = this.fieldId; //HACK TESTZZZ
-
-                    Console.WriteLine("ERROR: Field.cs, LINE: 54?");
+                    token.TokenPosition = this.fieldId; //Sets the tokens current position
                     return true;
                 }
-                //else
-                //{
-
-                //}
             }
             else //No tokens found
             {
                 tokensList.Add(token);
                 this.color = token.GetColor();
-                Console.WriteLine("ERROR: Field.cs, LINE: 66?");
                 return true;
             }
-        Console.WriteLine("ERROR: Field.cs, LINE: 69?");
         return false;
         }
 
@@ -92,7 +77,7 @@ namespace Ludo2
             this.color = GameColor.None;
             for (int i = 0; i < (this.tokensList.Count - 1); i++)
             {
-                this.tokensList[i] = null;
+                this.tokensList.RemoveAt(i);
             }
         }
 
@@ -100,7 +85,7 @@ namespace Ludo2
         {
             RemoveToken();
 
-            //MusicHandler.DeathSound();
+            MusicHandler.DeathSound();
 
             token.TokenPosition = token.StartPosition;
             token.TokenState = TokenState.Home;

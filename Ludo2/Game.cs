@@ -18,6 +18,7 @@ namespace Ludo2
         private Player[] players; //defines the array of players
         private int plrArrayId = 0; //Defines the player's turn
         private Field[] fields; //Defines the fields in the game
+        private Field[] innerFields;
 
         Dice die = new Dice(); //Makes an object of the class 'Dice'
 
@@ -25,11 +26,13 @@ namespace Ludo2
         public Game()
         {
             //MusicHandler.DeathSound();
+            
 
             this.numberOfPlayers = SetNumberOfPlayers(); //Sets the number of players before the game begins
             CreatePlayers(); //This method creates the players
             CreateField(); //Creates the fields used in the game
             GetPlayers(); //Debug
+            GetField();
             this.state = GameState.InPlay; //Changes the gamestate to play since we're actually beginning to play the game
             Turn(); //Begins player one's turn
         }
@@ -135,11 +138,19 @@ namespace Ludo2
         //Creates the fields used in the game
         private void CreateField()
         {
+            //TODO make innerfields
+
             fields = new Field[52]; //creates the field array
+            innerFields = new Field[5];
 
             for(int i = 0; i < 52; i++)
             {
                 fields[i] = new Field(i + 1); //gives the fields the correct data
+
+                if(i < 5)
+                {
+                    innerFields[i] = new Field(i);
+                }
             }
         }
 
@@ -189,11 +200,10 @@ namespace Ludo2
                             Console.Write(" - Kan ikke spilles");
                         }
                         break;
-                    case TokenState.InPlay:
-                        Console.Write(" <- Kan spilles : " + tkn.TokenPosition + " ");
-                        choice++;
+                    case TokenState.Finished:
+                        Console.Write(" <- Er ved mål");
                         break;
-                    case TokenState.Safe:
+                    default:
                         Console.Write(" <- Kan spilles : " + tkn.TokenPosition + " ");
                         choice++;
                         break;
@@ -255,7 +265,6 @@ namespace Ludo2
 
         //--------------------- DIVIDER ---------------------
 
-        //REWRITE Token Move Method
 
         //Moves the token
         private void MoveToField(Player[] plr, int dieRoll)
@@ -267,7 +276,6 @@ namespace Ludo2
             }
 
             int tknId = ChooseTokenToMove();
-            int plrArrayId = numberOfPlayers - 1; //Instead of writing (plrId - 1) everywhere
             int fieldToMove = plr[plrArrayId].GetToken(tknId).TokenPosition + die.GetValue(); //Calculates the field to move the token to
 
             int startPos = plr[plrArrayId].GetStartpoint(); //Gets the starting position of each individual player
@@ -292,9 +300,6 @@ namespace Ludo2
                         }
                         break;
                     default:
-
-                        //TODO FIX CODE BELOW??? ------------------------------
-
                         if (plr[plrArrayId].GetToken(tknId).TokenState == TokenState.InPlay)
                         {
 
@@ -325,11 +330,18 @@ namespace Ludo2
         {
             foreach(Player pl in players)
             {
-                Console.WriteLine("#" + pl.GetName() + " - " + pl.GetColor() + " - " + pl.GetTokens() + " - " + pl.GetStartpoint());
+                Console.WriteLine("#" + pl.GetName() + " - " + pl.GetColor() + " - " + pl.GetStartpoint());
+
+                for (int i = 0; i < 4; i++)
+                {
+                    Console.WriteLine(pl.GetToken(i));
+                }
+
+                
             }
         }
         
-        //Gets a list of all the fields DEBUG ONLY NOT RELEASE
+        //Gets a list of all the fields
         private void GetField()
         {
             foreach(Field fi in this.fields)

@@ -18,10 +18,9 @@ namespace Ludo2
                 }
             }*/
             //Main Game Object
-            //Game Ludo = new Game(); //The only line of code we need for the game to work
-
-            //MusicHandler.DeathSound();
-            MusicHandler.SoundTrack();
+            Game Ludo = new Game(); //The only line of code we need for the game to work
+            
+            //MusicHandler.SoundTrack();
 
             Console.Read();
         }
