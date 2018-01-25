@@ -28,15 +28,19 @@ namespace Ludo2
             if (token.TokenState == TokenState.Safe)
             {
                 //TODO make innerFields move method
+                if (token.TokenPosition + dieRoll >= 5)
+                {
+                    RemoveToken();
+                    token.TokenState = TokenState.Finished;
+                }
+                else
+                {
+                    
+                }
             }
 
             if (tokensList.Count > 1)
             {
-
-                Console.WriteLine("LENGTH: " + tokensList.Count);
-                Console.WriteLine("ANY: " + tokensList.Any());
-                Console.WriteLine("COUNT: " + tokensList.Count());
-
                 if (token.GetColor() != this.color)
                 {
 

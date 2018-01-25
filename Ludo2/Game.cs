@@ -300,10 +300,8 @@ namespace Ludo2
                         }
                         break;
                     default:
-                        if (plr[plrArrayId].GetToken(tknId).TokenState == TokenState.InPlay)
+                        if (plr[plrArrayId].GetToken(tknId).TokenState == TokenState.InPlay || plr[plrArrayId].GetToken(tknId).TokenState == TokenState.Safe)
                         {
-
-                        
                         MoveToken(plr, tknId, fieldToMove);
 
                         plr[plrArrayId].GetToken(tknId).TokenPosition += die.GetValue();
@@ -322,6 +320,8 @@ namespace Ludo2
         //Moves the token
         private void MoveToken(Player[] plr, int tknId, int fieldToMove)
         {
+            //TODO make Fully working movement
+
             hasMoveSucceded = fields[fieldToMove].PlaceToken(plr[plrArrayId].GetToken(tknId), plr[plrArrayId].GetColor(), die.GetValue());
         }
 
