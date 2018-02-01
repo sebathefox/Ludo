@@ -17,7 +17,6 @@ namespace Ludo2
         //---------------- Constructor ----------------
         public Field(int fieldId, GameColor color = GameColor.None)
         {
-            //Self explanatory
             this.fieldId = fieldId;
             this.color = color;
         }
@@ -32,10 +31,14 @@ namespace Ludo2
                 {
                     RemoveToken();
                     token.TokenState = TokenState.Finished;
+                    return true;
                 }
                 else
                 {
-                    
+                    tokensList.Add(token);
+                    Console.WriteLine("ERROR: INNERFIELDS");
+                    return true;
+
                 }
             }
 
@@ -43,43 +46,46 @@ namespace Ludo2
             {
                 if (token.GetColor() != this.color)
                 {
-
                     KillToken(token); //Kills the token that moved because there was more than 1 enemy token
+                    Console.WriteLine("ERROR: NOTTHISCOLOR");
                     return false;
                 }
                 else
                 {
                     tokensList.Add(token);
+                    Console.WriteLine("ERROR: THISCOLOR");
                     return true;
                 }
             }
-            else if (tokensList.Count < 0)
+            else if (tokensList.Count == 0)
             {
-                if (token.GetColor() != this.color)
+                if (token.GetColor() != this.color && this.color != GameColor.None)
                 {
                     KillToken(this.tokensList.ElementAt(0)); //Kills the already placed token
 
-                    tokensList.Add(token);
-                    this.color = token.GetColor();
+                    PlToken(token);
                     tokensList.RemoveAt(0);
-
-                    token.TokenPosition = this.fieldId; //Sets the tokens current position
+                    Console.WriteLine("ERROR: BACKINCONTROL");
                     return true;
                 }
             }
-            else //No tokens found
-            {
-                tokensList.Add(token);
-                this.color = token.GetColor();
-                return true;
-            }
-        return false;
+            PlToken(token);
+            Console.WriteLine("ERROR: THISISNOTTHEERRORYOURELOOKINGFOR");
+            return true;
+
+        }
+
+        private void PlToken(Token token)
+        {
+            tokensList.Add(token);
+            this.color = token.GetColor();
+            token.TokenPosition = this.fieldId;
         }
 
         public void RemoveToken()
         {
             this.color = GameColor.None;
-            for (int i = 0; i < (this.tokensList.Count - 1); i++)
+            for (int i = 0; i < (this.tokensList.Count); i++)
             {
                 this.tokensList.RemoveAt(i);
             }
@@ -98,15 +104,9 @@ namespace Ludo2
         //---------------- Getters ----------------
 
         //Gets the color of the field
-        public GameColor GetFieldColor()
-        {
-            return this.color;
-        }
+        public GameColor GetFieldColor() => this.color;
 
         //Gets the id of the field
-        public int GetFieldId()
-        {
-            return this.fieldId;
-        }
+        public int GetFieldId() => this.fieldId;
     }
 }

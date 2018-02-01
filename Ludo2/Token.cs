@@ -16,26 +16,20 @@ namespace Ludo2
         //---------------- Constructor ----------------
         public Token(int tokenId, GameColor color, int startPos)
         {
-            //Self explanatory
             this.tokenId = tokenId;
             this.color = color;
             this.state = TokenState.Home; //sets the default state to 'Home'
             this.startPosition = startPos;
+            
         }
 
         //---------------- Getters ----------------
 
         //Gets the id of the currently selected token
-        public int GetTokenId()
-        {
-            return this.tokenId;
-        }
+        public int GetTokenId() => this.tokenId;
 
         //Gets the color of the currently selected token
-        public GameColor GetColor()
-        {
-            return this.color;
-        }
+        public GameColor GetColor() => this.color;
 
         public TokenState TokenState
         {
@@ -53,6 +47,5 @@ namespace Ludo2
         {
             get => startPosition;
         }
-
     }
 }

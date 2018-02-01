@@ -12,7 +12,7 @@ namespace Ludo2
         
         private GameState state; //Defines a gamestate variable
 
-        bool hasMoveSucceded;
+        private bool hasMoveSucceded; //Debug purpose
 
         private readonly int numberOfPlayers; //Defines the number of players in the game
         private Player[] players; //defines the array of players
@@ -25,7 +25,7 @@ namespace Ludo2
         //---------------- Constructor ----------------
         public Game()
         {
-            //MusicHandler.DeathSound();
+            MusicHandler.DeathSound();
             
 
             this.numberOfPlayers = SetNumberOfPlayers(); //Sets the number of players before the game begins
@@ -276,35 +276,45 @@ namespace Ludo2
             }
 
             int tknId = ChooseTokenToMove();
-            int fieldToMove = plr[plrArrayId].GetToken(tknId).TokenPosition + die.GetValue(); //Calculates the field to move the token to
+            int fielToRemove = plr[plrArrayId].GetToken(tknId).TokenPosition - 1;
+            int fieldToMove = plr[plrArrayId].GetToken(tknId).TokenPosition + (die.GetValue() - 1); //Calculates the field to move the token to
 
             int startPos = plr[plrArrayId].GetStartpoint(); //Gets the starting position of each individual player
 
-                plr[plrArrayId].GetToken(tknId).TokenState = TokenState.InPlay;
+            TokenState tokenState = plr[plrArrayId].GetToken(tknId).TokenState;
+
+
+            plr[plrArrayId].GetToken(tknId).TokenState = TokenState.InPlay;
+            if (fieldToMove > 52)
+            {
+                Console.WriteLine("EHHHHH: 288");
+
+                fieldToMove = plr[plrArrayId].GetToken(tknId).TokenPosition + (die.GetValue() - 51);
+
+                MoveToken(plr, tknId, fieldToMove, fielToRemove);
+            }
+            else
+            {
                 switch (dieRoll)
                 {
-                    case (6): //OPTIMIZE
-                        if (plr[plrArrayId].GetToken(tknId).Equals(TokenState.InPlay))
+                    case (6):
+                        if (tokenState.Equals(TokenState.InPlay))
                         {
-                            hasMoveSucceded = fields[(plr[plrArrayId].GetToken(tknId).TokenPosition + 6)].PlaceToken(plr[plrArrayId].GetToken(tknId),
-                            plr[plrArrayId].GetColor(), die.GetValue());
-
-                            plr[plrArrayId].GetToken(tknId).TokenPosition = die.GetValue();
+                            MoveToken(plr, tknId, fieldToMove, fielToRemove);
+                        }
+                        else if (tokenState.Equals(TokenState.Home))
+                        {
+                            MoveToken(plr, tknId, startPos, fielToRemove);
                         }
                         else
                         {
-                            MoveToken(plr, tknId, fieldToMove);
-                            plr[plrArrayId].GetToken(tknId).TokenPosition = plr[plrArrayId].GetStartpoint();
-
-                            plr[plrArrayId].GetToken(tknId).TokenPosition = plr[plrArrayId].GetStartpoint() + die.GetValue();
+                            MoveToken(plr, tknId, fieldToMove, fielToRemove);
                         }
                         break;
                     default:
-                        if (plr[plrArrayId].GetToken(tknId).TokenState == TokenState.InPlay || plr[plrArrayId].GetToken(tknId).TokenState == TokenState.Safe)
+                        if (tokenState == TokenState.InPlay || tokenState == TokenState.Safe)
                         {
-                        MoveToken(plr, tknId, fieldToMove);
-
-                        plr[plrArrayId].GetToken(tknId).TokenPosition += die.GetValue();
+                            MoveToken(plr, tknId, fieldToMove, fielToRemove);
                         }
                         else
                         {
@@ -312,15 +322,17 @@ namespace Ludo2
                         }
                         break;
                 }
-                Console.WriteLine("\n" + hasMoveSucceded);
+            }
+            Console.WriteLine("\n" + hasMoveSucceded);
         }
 
         //--------------------- DIVIDER ---------------------
 
         //Moves the token
-        private void MoveToken(Player[] plr, int tknId, int fieldToMove)
+        private void MoveToken(Player[] plr, int tknId, int fieldToMove, int fieldToRemove)
         {
-            //TODO make Fully working movement
+
+            fields[fieldToRemove].RemoveToken();
 
             hasMoveSucceded = fields[fieldToMove].PlaceToken(plr[plrArrayId].GetToken(tknId), plr[plrArrayId].GetColor(), die.GetValue());
         }
@@ -336,8 +348,6 @@ namespace Ludo2
                 {
                     Console.WriteLine(pl.GetToken(i));
                 }
-
-                
             }
         }
         

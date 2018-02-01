@@ -16,7 +16,6 @@ namespace Ludo2
         /// </summary>
         public Player(string name, int playerId, Token[] tokens, int startPoint)
         {
-            //Self explanatory
             this.name = name;
             this.playerId = playerId;
             this.tokens = tokens;
@@ -38,49 +37,31 @@ namespace Ludo2
         /// <summary>
         /// Gets the id of the player object
         /// </summary>
-        public int GetId() 
-        {
-            return this.playerId;
-        }
+        public int GetId() => this.playerId;
 
         /// <summary>
         /// Gets the name of the player object
         /// </summary>
-        public string GetName()
-        {
-            return this.name;
-        }
+        public string GetName() => this.name;
 
         /// <summary>
         /// Gets the color of the player object
         /// </summary>
-        public GameColor GetColor()
-        {
-                return this.color;
-        }
-
+        public GameColor GetColor() => this.color;
+        
         /// <summary>
         /// Gets the array with the players tokens
         /// </summary>
-        public Token[] GetTokens()
-        {
-            return this.tokens;
-        }
+        public Token[] GetTokens() => this.tokens;
 
         /// <summary>
         /// Gets a single array from the token array
         /// </summary>
-        public Token GetToken(int tknid)
-        {
-            return this.tokens[tknid];
-        }
-
+        public Token GetToken(int tknid) => this.tokens[tknid];
+        
         /// <summary>
         /// Gets the startpoint Do NOT Work~
         /// </summary>
-        public int GetStartpoint()
-        {
-            return this.startPoint;
-        }
+        public int GetStartpoint() => this.startPoint;
     }
 }
