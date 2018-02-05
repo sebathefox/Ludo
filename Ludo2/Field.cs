@@ -36,24 +36,22 @@ namespace Ludo2
                 else
                 {
                     tokensList.Add(token);
-                    Console.WriteLine("ERROR: INNERFIELDS");
                     return true;
 
                 }
             }
 
+            //TODO what does this even do???
             if (tokensList.Count > 1)
             {
                 if (token.GetColor() != this.color)
                 {
                     KillToken(token); //Kills the token that moved because there was more than 1 enemy token
-                    Console.WriteLine("ERROR: NOTTHISCOLOR");
                     return false;
                 }
                 else
                 {
                     tokensList.Add(token);
-                    Console.WriteLine("ERROR: THISCOLOR");
                     return true;
                 }
             }
@@ -65,12 +63,10 @@ namespace Ludo2
 
                     PlToken(token);
                     tokensList.RemoveAt(0);
-                    Console.WriteLine("ERROR: BACKINCONTROL");
                     return true;
                 }
             }
             PlToken(token);
-            Console.WriteLine("ERROR: THISISNOTTHEERRORYOURELOOKINGFOR");
             return true;
 
         }
@@ -100,6 +96,11 @@ namespace Ludo2
             token.TokenPosition = token.StartPosition;
             token.TokenState = TokenState.Home;
         }
+
+        /*private void EndOfSomething(Token token, int dieRoll)
+        {
+            
+        }*/
 
         //---------------- Getters ----------------
 

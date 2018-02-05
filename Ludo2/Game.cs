@@ -47,14 +47,14 @@ namespace Ludo2
         {
             int numOfPlayers = 0;
 
-            Console.Write("Hvor mange spillere?: "); //Asks for how many players there will be in this game
+            Console.Write("How many players?: "); //Asks for how many players there will be in this game
 
             while(numOfPlayers < 2 || numOfPlayers > 4) //hecks if there is less than 2 or more than 4
             {
                 if (!int.TryParse(Console.ReadKey().KeyChar.ToString(), out numOfPlayers)) //Tries to save the input as 'this.numberOfPlayers'
                 {
                     Console.WriteLine(); //Makes a blank space
-                    Console.WriteLine("Ugyldig værdi, vælg et tal mellem 2 og 4\n");
+                    Console.WriteLine("Unknown input, choose between 2 and 4\n");
                 }
             }
             return numOfPlayers;
@@ -70,7 +70,7 @@ namespace Ludo2
             Console.WriteLine();
             for (int i = 0; i < this.numberOfPlayers; i++) //Runs until all users have names
             {
-                Console.Write("Hvad hedder spiller {0}: ", (i+1)); //Asks for the players name
+                Console.Write("What is the name of player {0}: ", (i+1)); //Asks for the players name
                 string name = Console.ReadLine(); //saves the name as a temporary variable called 'name'
 
                 //int startpointAssign = StartpointAssignment(i); //Assigns the startpoint for each of the users
@@ -112,21 +112,28 @@ namespace Ludo2
 
             int startPos = StartpointAssignment(index);
 
+            int endPos = startPos - 2;
+
+            if (endPos < 0)
+            {
+                endPos = 50;
+            }
+
             for (int i = 0; i <= 3; i++) //runs four times
             {
                 switch (index) //gives the same color to the tokens as the player
                 {
                     case 0:
-                        tokens[i] = new Token((i + 1), GameColor.Yellow, startPos); //Defines the color for the token
+                        tokens[i] = new Token((i + 1), GameColor.Yellow, startPos, endPos); //Defines the color for the token
                         break;
                     case 1:
-                        tokens[i] = new Token((i + 1), GameColor.Blue, startPos); //Defines the color for the token
+                        tokens[i] = new Token((i + 1), GameColor.Blue, startPos, endPos); //Defines the color for the token
                         break;
                     case 2:
-                        tokens[i] = new Token((i + 1), GameColor.Red, startPos); //Defines the color for the token
+                        tokens[i] = new Token((i + 1), GameColor.Red, startPos, endPos); //Defines the color for the token
                         break;
                     case 3:
-                        tokens[i] = new Token((i + 1), GameColor.Green, startPos); //Defines the color for the token
+                        tokens[i] = new Token((i + 1), GameColor.Green, startPos, endPos); //Defines the color for the token
                         break;
                 }
             }
@@ -139,14 +146,12 @@ namespace Ludo2
         private void CreateField()
         {
             //TODO make innerfields
-
             fields = new Field[52]; //creates the field array
             innerFields = new Field[5];
 
             for(int i = 0; i < 52; i++)
             {
                 fields[i] = new Field(i + 1); //gives the fields the correct data
-
                 if(i < 5)
                 {
                     innerFields[i] = new Field(i);
@@ -162,14 +167,14 @@ namespace Ludo2
             while(state == GameState.InPlay) //Checks if the game is on
             {
                 Player turn = players[(plrArrayId)]; //Finds the player in the array
-                Console.WriteLine("Det er " + turn.GetName() + "'s tur\n"); //Some 'nice' output
+                Console.WriteLine("It is " + turn.GetName() + "'s turn\n"); //Some 'nice' output
                 do
                 {
-                    Console.Write("Tryk 'k' for at kaste med terningen: ");
+                    Console.Write("Press 'K' to roll the die: ");
                 }
                 while (Console.ReadKey().KeyChar != 'k');
                 Console.WriteLine();
-                Console.WriteLine("Du slog: " + die.ThrowDice().ToString());
+                Console.WriteLine("You got: " + die.ThrowDice().ToString());
                 Console.WriteLine();
                 CanIMove(turn.GetTokens()); //Checks if the player can move
             }
@@ -182,36 +187,36 @@ namespace Ludo2
         {
             int choice = 0; //How many tokens can the player move
 
-            Console.WriteLine("Her er dine brikker:\n");
+            Console.WriteLine("Here are your tokens:\n");
             foreach(Token tkn in tokens) //Begins to write the tokens of the player
             {
-                Console.Write("Brik nr: " + tkn.GetTokenId() + "   er placeret: " + tkn.TokenState); //Writes the id and state of each of the tokens
+                Console.Write("Token number: " + tkn.GetTokenId() + " are placed: " + tkn.TokenState); //Writes the id and state of each of the tokens
 
                 switch(tkn.TokenState) //Begins to check if the player can do anything with his/hers tokens
                 {
                     case TokenState.Home:
                         if(die.GetValue() == 6)
                         {
-                            Console.Write(" - Kan spilles");
+                            Console.Write(" - Can move");
                             choice++; //Can move this token AKA a choice
                         }
                         else
                         {
-                            Console.Write(" - Kan ikke spilles");
+                            Console.Write(" - Can not move");
                         }
                         break;
                     case TokenState.Finished:
-                        Console.Write(" <- Er ved mål");
+                        Console.Write(" <- Is finished");
                         break;
                     default:
-                        Console.Write(" <- Kan spilles : " + tkn.TokenPosition + " ");
+                        Console.Write(" <- Can move : " + tkn.TokenPosition + " ");
                         choice++;
                         break;
                 }
                 Console.WriteLine();
             }
             Console.WriteLine();
-            Console.WriteLine("Du har " + choice.ToString() + " muligheder i den her tur\n");
+            Console.WriteLine("You have " + choice.ToString() + " options in this turn\n");
 
             if(choice == 0) //Cant do anything this turn skips the player
             {
@@ -239,7 +244,7 @@ namespace Ludo2
                 plrArrayId++;
             }
 
-            Console.WriteLine("Skifter spiller\n");
+            Console.WriteLine("Changing player\n");
             Turn();
         }
 
@@ -250,91 +255,118 @@ namespace Ludo2
         {
             int tokenToMove = 0; //Only used in this method
 
-            //Clear(); //Makes the console look nicer
-            Console.WriteLine("Vælg den brik du vil rykke (Brug et tal fra 1 til 4)");
+            Console.WriteLine("Choose a token to move (Use a number between 1 and 4)");
             while (tokenToMove < 1 || tokenToMove > 4)
             {
                 if (!int.TryParse(Console.ReadKey().KeyChar.ToString(), out tokenToMove))
                 {
                     Console.WriteLine();
-                    Console.WriteLine("Ugyldig værdi, vælg et tal mellem 1 og 4");
+                    Console.WriteLine("Unknown input, Use a number between 1 and 4");
                 }
             }
             return tokenToMove -1;
         }
 
         //--------------------- DIVIDER ---------------------
-
-
+        
         //Moves the token
         private void MoveToField(Player[] plr, int dieRoll)
         {
-
             foreach(Player pl in plr)
             {
-                Console.WriteLine("Spiller: " + pl.GetName() + " " + pl.GetId());
+                Console.WriteLine("Player: " + pl.GetName() + " " + pl.GetId());
             }
+            
+            int tknId = ChooseTokenToMove(); //Gets the id of the token to move
 
-            int tknId = ChooseTokenToMove();
-            int fielToRemove = plr[plrArrayId].GetToken(tknId).TokenPosition - 1;
-            int fieldToMove = plr[plrArrayId].GetToken(tknId).TokenPosition + (die.GetValue() - 1); //Calculates the field to move the token to
+            Token turnToken = plr[plrArrayId].GetToken(tknId); //Saves the token in a temporary object
 
-            int startPos = plr[plrArrayId].GetStartpoint(); //Gets the starting position of each individual player
+            int fieldToRemove = turnToken.TokenPosition; //The field to remove the token from
+            int fieldToMove = turnToken.TokenPosition + (die.GetValue() - 1); //The field the token should move to
 
-            TokenState tokenState = plr[plrArrayId].GetToken(tknId).TokenState;
+            int startPos = turnToken.StartPosition; //The startposition of this token (all of this players tokens have the same startposition)
+            
+            int finPosition = turnToken.SafePosition; //the last field of the outer board
 
-
-            plr[plrArrayId].GetToken(tknId).TokenState = TokenState.InPlay;
-            if (fieldToMove > 52)
+            //TODO FIX endless loop
+            //The KillerLine
+            //if (turnToken.TokenPosition > turnToken.SafePosition - 3 || turnToken.TokenPosition < turnToken.SafePosition + 3 && turnToken.TokenState == TokenState.InPlay)
+            if(turnToken.TokenState == TokenState.InPlay)
             {
-                Console.WriteLine("EHHHHH: 288");
+                turnToken.TokenState = TokenState.Safe;
 
-                fieldToMove = plr[plrArrayId].GetToken(tknId).TokenPosition + (die.GetValue() - 51);
+                if (fieldToMove >= 52)
+                {
+                    fieldToMove = turnToken.TokenPosition + (die.GetValue() - 51);
+                    MoveToken(turnToken, fieldToMove, fieldToRemove);
+                }
+                //fieldToRemove = turnToken.TokenPosition - (die.GetValue() - 1);
 
-                MoveToken(plr, tknId, fieldToMove, fielToRemove);
+                MoveToken(turnToken, fieldToMove, fieldToRemove);
             }
             else
             {
-                switch (dieRoll)
+
+
+
+                turnToken.TokenState = TokenState.InPlay;
+
+                if (fieldToMove >= 52)
                 {
-                    case (6):
-                        if (tokenState.Equals(TokenState.InPlay))
-                        {
-                            MoveToken(plr, tknId, fieldToMove, fielToRemove);
-                        }
-                        else if (tokenState.Equals(TokenState.Home))
-                        {
-                            MoveToken(plr, tknId, startPos, fielToRemove);
-                        }
-                        else
-                        {
-                            MoveToken(plr, tknId, fieldToMove, fielToRemove);
-                        }
-                        break;
-                    default:
-                        if (tokenState == TokenState.InPlay || tokenState == TokenState.Safe)
-                        {
-                            MoveToken(plr, tknId, fieldToMove, fielToRemove);
-                        }
-                        else
-                        {
-                            Console.WriteLine("This Token Can't move.");
-                        }
-                        break;
+                    fieldToMove = turnToken.TokenPosition + (die.GetValue() - 51);
+                    MoveToken(turnToken, fieldToMove, fieldToRemove);
+                }
+                else
+                {
+                    switch (dieRoll)
+                    {
+                        case (6):
+                            if (turnToken.TokenState.Equals(TokenState.InPlay))
+                            {
+                                MoveToken(turnToken, fieldToMove, fieldToRemove);
+                            }
+                            else if (turnToken.TokenState.Equals(TokenState.Home))
+                            {
+                                MoveToken(turnToken, startPos, fieldToRemove);
+                            }
+                            else
+                            {
+                                MoveToken(turnToken, fieldToMove, fieldToRemove);
+                            }
+                            break;
+                        default:
+                            if (turnToken.TokenState == TokenState.InPlay || turnToken.TokenState == TokenState.Safe)
+                            {
+                                MoveToken(turnToken, fieldToMove, fieldToRemove);
+                            }
+                            else
+                            {
+                                Console.WriteLine("This Token Can't move.");
+                            }
+                            break;
+                    }
                 }
             }
-            Console.WriteLine("\n" + hasMoveSucceded);
+            Console.WriteLine("\n" + hasMoveSucceded); //Debug mode only
         }
 
         //--------------------- DIVIDER ---------------------
 
         //Moves the token
-        private void MoveToken(Player[] plr, int tknId, int fieldToMove, int fieldToRemove)
+        private void MoveToken(Token token, int fieldToMove, int fieldToRemove)
         {
+            //if (token.TokenState == TokenState.Safe)
+            //{
+            //    innerFields[fieldToMove].RemoveToken();
 
-            fields[fieldToRemove].RemoveToken();
+            //    hasMoveSucceded = innerFields[fieldToMove].PlaceToken(token, token.GetColor(), die.GetValue());
+            //}
+            //else
+            //{
+                fields[fieldToRemove].RemoveToken();
 
-            hasMoveSucceded = fields[fieldToMove].PlaceToken(plr[plrArrayId].GetToken(tknId), plr[plrArrayId].GetColor(), die.GetValue());
+                hasMoveSucceded = fields[fieldToMove].PlaceToken(token, token.GetColor(), die.GetValue());
+            //}
         }
 
         //Gets a list of all the players
