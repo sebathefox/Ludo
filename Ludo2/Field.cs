@@ -26,8 +26,8 @@ namespace Ludo2
         {
             if (token.TokenState == TokenState.Safe)
             {
-                //TODO make innerFields move method
-                if (token.TokenPosition + dieRoll >= 5)
+                //TODO make SAFE move method
+                if (token.TokenPosition + dieRoll >= 57)
                 {
                     RemoveToken();
                     token.TokenState = TokenState.Finished;
@@ -36,6 +36,7 @@ namespace Ludo2
                 else
                 {
                     tokensList.Add(token);
+                    token.TokenPosition = this.fieldId;
                     return true;
 
                 }
@@ -95,12 +96,8 @@ namespace Ludo2
 
             token.TokenPosition = token.StartPosition;
             token.TokenState = TokenState.Home;
+            token.Counter = 0;
         }
-
-        /*private void EndOfSomething(Token token, int dieRoll)
-        {
-            
-        }*/
 
         //---------------- Getters ----------------
 

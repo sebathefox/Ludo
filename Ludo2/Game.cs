@@ -18,7 +18,6 @@ namespace Ludo2
         private Player[] players; //defines the array of players
         private int plrArrayId = 0; //Defines the player's turn
         private Field[] fields; //Defines the fields in the game
-        private Field[] innerFields;
 
         Dice die = new Dice(); //Makes an object of the class 'Dice'
 
@@ -146,16 +145,11 @@ namespace Ludo2
         private void CreateField()
         {
             //TODO make innerfields
-            fields = new Field[52]; //creates the field array
-            innerFields = new Field[5];
+            fields = new Field[57]; //creates the field array
 
-            for(int i = 0; i < 52; i++)
+            for(int i = 0; i < 57; i++)
             {
                 fields[i] = new Field(i + 1); //gives the fields the correct data
-                if(i < 5)
-                {
-                    innerFields[i] = new Field(i);
-                }
             }
         }
 
@@ -268,15 +262,15 @@ namespace Ludo2
         }
 
         //--------------------- DIVIDER ---------------------
-        
+
         //Moves the token
         private void MoveToField(Player[] plr, int dieRoll)
         {
-            foreach(Player pl in plr)
+            foreach (Player pl in plr)
             {
                 Console.WriteLine("Player: " + pl.GetName() + " " + pl.GetId());
             }
-            
+
             int tknId = ChooseTokenToMove(); //Gets the id of the token to move
 
             Token turnToken = plr[plrArrayId].GetToken(tknId); //Saves the token in a temporary object
@@ -285,69 +279,72 @@ namespace Ludo2
             int fieldToMove = turnToken.TokenPosition + (die.GetValue() - 1); //The field the token should move to
 
             int startPos = turnToken.StartPosition; //The startposition of this token (all of this players tokens have the same startposition)
-            
-            int finPosition = turnToken.SafePosition; //the last field of the outer board
 
-            //TODO FIX endless loop
-            //The KillerLine
-            //if (turnToken.TokenPosition > turnToken.SafePosition - 3 || turnToken.TokenPosition < turnToken.SafePosition + 3 && turnToken.TokenState == TokenState.InPlay)
-            if(turnToken.TokenState == TokenState.InPlay)
+            //TODO make innerfields code
+
+            if (turnToken.Counter + dieRoll > 52)
             {
-                turnToken.TokenState = TokenState.Safe;
 
-                if (fieldToMove >= 52)
+                switch(turnToken.GetColor())
                 {
-                    fieldToMove = turnToken.TokenPosition + (die.GetValue() - 51);
-                    MoveToken(turnToken, fieldToMove, fieldToRemove);
-                }
-                //fieldToRemove = turnToken.TokenPosition - (die.GetValue() - 1);
+                    case GameColor.Yellow:
+                        int tempz = dieRoll + (turnToken.TokenPosition - 52);
+                        fieldToMove = 52 + tempz;
 
-                MoveToken(turnToken, fieldToMove, fieldToRemove);
+                        MoveToken(turnToken, fieldToMove, fieldToRemove);
+
+                        break;
+                }
+
+                //TODO actually place the token in the inner fields
+
+                //turnToken.TokenState = TokenState.Safe;
+                //int tempPosition = turnToken.TokenPosition - 56;
+                //fieldToMove = 56 + tempPosition;
+                //MoveToken(turnToken, fieldToMove, fieldToRemove);
             }
             else
             {
 
-
-
-                turnToken.TokenState = TokenState.InPlay;
-
-                if (fieldToMove >= 52)
+                if (fieldToMove >= 52 && turnToken.TokenState == TokenState.InPlay)
                 {
                     fieldToMove = turnToken.TokenPosition + (die.GetValue() - 51);
                     MoveToken(turnToken, fieldToMove, fieldToRemove);
                 }
                 else
                 {
+                    turnToken.TokenState = TokenState.InPlay;
+
                     switch (dieRoll)
                     {
-                        case (6):
-                            if (turnToken.TokenState.Equals(TokenState.InPlay))
-                            {
-                                MoveToken(turnToken, fieldToMove, fieldToRemove);
-                            }
-                            else if (turnToken.TokenState.Equals(TokenState.Home))
-                            {
-                                MoveToken(turnToken, startPos, fieldToRemove);
-                            }
-                            else
-                            {
-                                MoveToken(turnToken, fieldToMove, fieldToRemove);
-                            }
-                            break;
-                        default:
-                            if (turnToken.TokenState == TokenState.InPlay || turnToken.TokenState == TokenState.Safe)
-                            {
-                                MoveToken(turnToken, fieldToMove, fieldToRemove);
-                            }
-                            else
-                            {
-                                Console.WriteLine("This Token Can't move.");
-                            }
-                            break;
+                    case (6):
+                        if (turnToken.TokenState.Equals(TokenState.InPlay))
+                        {
+                            MoveToken(turnToken, fieldToMove, fieldToRemove);
+                        }
+                        else if (turnToken.TokenState.Equals(TokenState.Home))
+                        {
+                            MoveToken(turnToken, startPos, fieldToRemove);
+                        }
+                        else
+                        {
+                            MoveToken(turnToken, fieldToMove, fieldToRemove);
+                        }
+                        break;
+                    default:
+                        if (turnToken.TokenState == TokenState.InPlay || turnToken.TokenState == TokenState.Safe)
+                        {
+                            MoveToken(turnToken, fieldToMove, fieldToRemove);
+                        }
+                        else
+                        {
+                            Console.WriteLine("This Token Can't move.");
+                        }
+                        break;
                     }
                 }
             }
-            Console.WriteLine("\n" + hasMoveSucceded); //Debug mode only
+            Console.WriteLine("\n" + hasMoveSucceded); //Uncomment for debug
         }
 
         //--------------------- DIVIDER ---------------------
@@ -355,17 +352,11 @@ namespace Ludo2
         //Moves the token
         private void MoveToken(Token token, int fieldToMove, int fieldToRemove)
         {
-            //if (token.TokenState == TokenState.Safe)
-            //{
-            //    innerFields[fieldToMove].RemoveToken();
+            token.Counter += die.GetValue();
 
-            //    hasMoveSucceded = innerFields[fieldToMove].PlaceToken(token, token.GetColor(), die.GetValue());
-            //}
-            //else
-            //{
-                fields[fieldToRemove].RemoveToken();
+            fields[fieldToRemove].RemoveToken();
 
-                hasMoveSucceded = fields[fieldToMove].PlaceToken(token, token.GetColor(), die.GetValue());
+            hasMoveSucceded = fields[fieldToMove].PlaceToken(token, token.GetColor(), die.GetValue());
             //}
         }
 
@@ -383,7 +374,7 @@ namespace Ludo2
             }
         }
         
-        //Gets a list of all the fields
+        //Gets a list of all the fields USED FOR DEBUGGING
         private void GetField()
         {
             foreach(Field fi in this.fields)
