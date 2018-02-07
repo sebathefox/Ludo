@@ -27,7 +27,7 @@ namespace Ludo2
             if (token.TokenState == TokenState.Safe)
             {
                 //TODO make SAFE move method
-                if (token.TokenPosition + dieRoll >= 57)
+                if (token.Counter + dieRoll >= 57)
                 {
                     RemoveToken();
                     token.TokenState = TokenState.Finished;

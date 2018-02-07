@@ -36,10 +36,8 @@ namespace Ludo2
             Turn(); //Begins player one's turn
         }
 
+        #region Initialization
 
-        //
-        //The initialisation of the game is below
-        //
 
         //Sets the number of players before the game begins
         private int SetNumberOfPlayers()
@@ -152,6 +150,8 @@ namespace Ludo2
                 fields[i] = new Field(i + 1); //gives the fields the correct data
             }
         }
+
+        #endregion
 
         //--------------------- DIVIDER ---------------------
 
@@ -271,37 +271,64 @@ namespace Ludo2
                 Console.WriteLine("Player: " + pl.GetName() + " " + pl.GetId());
             }
 
-            int tknId = ChooseTokenToMove(); //Gets the id of the token to move
 
-            Token turnToken = plr[plrArrayId].GetToken(tknId); //Saves the token in a temporary object
+            //HIGHPRIORITY FIX CODE BELOW!!!!!!!!!!!
+
+            int tknId;
+            Token turnToken = null;
+
+            bool tmpBool = true;
+            while (tmpBool)
+            {
+
+                tknId = ChooseTokenToMove(); //Gets the id of the token to move
+
+                turnToken = plr[plrArrayId].GetToken(tknId); //Saves the token in a temporary object
+
+                if (turnToken.TokenState != TokenState.Finished || turnToken.TokenState != TokenState.Home)
+                {
+                    tmpBool = false;
+                }
+
+                Console.WriteLine("That token is unavailable to move");
+            }
 
             int fieldToRemove = turnToken.TokenPosition; //The field to remove the token from
-            int fieldToMove = turnToken.TokenPosition + (die.GetValue() - 1); //The field the token should move to
+            int fieldToMove = turnToken.TokenPosition + (die.GetValue()); //The field the token should move to
 
             int startPos = turnToken.StartPosition; //The startposition of this token (all of this players tokens have the same startposition)
 
             //TODO make innerfields code
-
+            #region Move the token to Safe
             if (turnToken.Counter + dieRoll > 52)
             {
-
-                switch(turnToken.GetColor())
-                {
-                    case GameColor.Yellow:
-                        int tempz = dieRoll + (turnToken.TokenPosition - 52);
-                        fieldToMove = 52 + tempz;
-
-                        MoveToken(turnToken, fieldToMove, fieldToRemove);
-
-                        break;
-                }
-
-                //TODO actually place the token in the inner fields
-
                 //turnToken.TokenState = TokenState.Safe;
-                //int tempPosition = turnToken.TokenPosition - 56;
-                //fieldToMove = 56 + tempPosition;
-                //MoveToken(turnToken, fieldToMove, fieldToRemove);
+                //int tempx = dieRoll + (turnToken.TokenPosition - 52);
+                //fieldToMove = 52 + tempx;
+
+
+                //TODO IMPLEMENT restOfDie
+                //int restOfDie = (turnToken.Counter + dieRoll) - 52;
+
+                //int lolReallyz = turnToken.TokenPosition 
+
+                int dieRest = (turnToken.TokenPosition + dieRoll) - fieldToRemove;
+
+                //int tknStpntStuff = (turnToken.StartPosition - 52) + turnToken.TokenPosition;
+
+                //int restOfDie = turnToken.Counter + dieRoll - tknStpntStuff;
+
+                if (turnToken.Counter >= 57)
+                {
+                    turnToken.TokenState = TokenState.Finished;
+                    fields[fieldToRemove].RemoveToken();
+                }
+                else
+                {
+                    MoveToken(turnToken, fieldToMove, fieldToRemove, dieRest);
+                }
+                #endregion
+                //TODO gonna get the remaining die numbers and then (hopefully) 'manually' move the token to the safeposition
             }
             else
             {
@@ -309,7 +336,7 @@ namespace Ludo2
                 if (fieldToMove >= 52 && turnToken.TokenState == TokenState.InPlay)
                 {
                     fieldToMove = turnToken.TokenPosition + (die.GetValue() - 51);
-                    MoveToken(turnToken, fieldToMove, fieldToRemove);
+                    MoveToken(turnToken, fieldToMove, fieldToRemove, dieRoll);
                 }
                 else
                 {
@@ -320,21 +347,21 @@ namespace Ludo2
                     case (6):
                         if (turnToken.TokenState.Equals(TokenState.InPlay))
                         {
-                            MoveToken(turnToken, fieldToMove, fieldToRemove);
+                            MoveToken(turnToken, fieldToMove, fieldToRemove, dieRoll);
                         }
                         else if (turnToken.TokenState.Equals(TokenState.Home))
                         {
-                            MoveToken(turnToken, startPos, fieldToRemove);
+                            MoveToken(turnToken, startPos, fieldToRemove, dieRoll);
                         }
                         else
                         {
-                            MoveToken(turnToken, fieldToMove, fieldToRemove);
+                            MoveToken(turnToken, fieldToMove, fieldToRemove, dieRoll);
                         }
                         break;
                     default:
                         if (turnToken.TokenState == TokenState.InPlay || turnToken.TokenState == TokenState.Safe)
                         {
-                            MoveToken(turnToken, fieldToMove, fieldToRemove);
+                            MoveToken(turnToken, fieldToMove, fieldToRemove, dieRoll);
                         }
                         else
                         {
@@ -350,15 +377,26 @@ namespace Ludo2
         //--------------------- DIVIDER ---------------------
 
         //Moves the token
-        private void MoveToken(Token token, int fieldToMove, int fieldToRemove)
+        private void MoveToken(Token token, int fieldToMove, int fieldToRemove, int dieRoll)
         {
+
+            //int tempxyzaeoeaa = 
+
             token.Counter += die.GetValue();
 
-            fields[fieldToRemove].RemoveToken();
+            if (token.TokenState == TokenState.Safe)
+            {
 
-            hasMoveSucceded = fields[fieldToMove].PlaceToken(token, token.GetColor(), die.GetValue());
-            //}
+            }
+            else
+            {                
+                fields[fieldToRemove].RemoveToken();
+
+                hasMoveSucceded = fields[fieldToMove].PlaceToken(token, token.GetColor(), dieRoll);
+            }
         }
+
+        #region Getters
 
         //Gets a list of all the players
         private void GetPlayers()
@@ -382,5 +420,7 @@ namespace Ludo2
                 Console.WriteLine(fi.GetFieldId() + " - " + fi.GetFieldColor());
             }
         }
+
+        #endregion
     }
 }
