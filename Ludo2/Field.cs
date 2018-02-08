@@ -11,9 +11,6 @@ namespace Ludo2
         private readonly int fieldId; //Every field needs an id
         private List<Token> tokensList = new List<Token>(); //creates an List to hold up to four tokens at the same time
 
-
-
-
         //---------------- Constructor ----------------
         public Field(int fieldId, GameColor color = GameColor.None)
         {
@@ -22,27 +19,8 @@ namespace Ludo2
         }
 
         //Places the token on the field
-        public bool PlaceToken(Token token, GameColor color, int dieRoll)
+        public bool PlaceToken(Token token, GameColor color/*, int dieRoll*/)
         {
-            if (token.TokenState == TokenState.Safe)
-            {
-                //TODO make SAFE move method
-                if (token.Counter + dieRoll >= 57)
-                {
-                    RemoveToken();
-                    token.TokenState = TokenState.Finished;
-                    return true;
-                }
-                else
-                {
-                    tokensList.Add(token);
-                    token.TokenPosition = this.fieldId;
-                    return true;
-
-                }
-            }
-
-            //TODO what does this even do???
             if (tokensList.Count > 1)
             {
                 if (token.GetColor() != this.color)
@@ -61,9 +39,9 @@ namespace Ludo2
                 if (token.GetColor() != this.color && this.color != GameColor.None)
                 {
                     KillToken(this.tokensList.ElementAt(0)); //Kills the already placed token
+                    RemoveToken();
 
                     PlToken(token);
-                    tokensList.RemoveAt(0);
                     return true;
                 }
             }
@@ -90,7 +68,7 @@ namespace Ludo2
 
         private void KillToken(Token token)
         {
-            RemoveToken();
+            
 
             MusicHandler.DeathSound();
 

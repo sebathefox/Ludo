@@ -24,13 +24,15 @@ namespace Ludo2
         //---------------- Constructor ----------------
         public Game()
         {
-            MusicHandler.DeathSound();
+
+            //IMPLEMENT Music
+            //MusicHandler.DeathSound();
             
 
             this.numberOfPlayers = SetNumberOfPlayers(); //Sets the number of players before the game begins
             CreatePlayers(); //This method creates the players
             CreateField(); //Creates the fields used in the game
-            GetPlayers(); //Debug
+            GetPlayers();
             GetField();
             this.state = GameState.InPlay; //Changes the gamestate to play since we're actually beginning to play the game
             Turn(); //Begins player one's turn
@@ -79,29 +81,6 @@ namespace Ludo2
 
         //--------------------- DIVIDER ---------------------
 
-        private int StartpointAssignment(int i)
-        {
-            int startPoint = 0; //the startpoint used by the player
-            switch (i)
-            {
-                case 0:
-                    startPoint = 0;
-                    break;
-                case 1:
-                    startPoint = 13;
-                    break;
-                case 2:
-                    startPoint = 26;
-                    break;
-                case 3:
-                    startPoint = 39;
-                    break;
-            }
-            return startPoint;
-        }
-
-        //--------------------- DIVIDER ---------------------
-
         //Assigns the tokens -- used in the method above
         private Token[] TokenAssign(int index)
         {
@@ -139,10 +118,32 @@ namespace Ludo2
 
         //--------------------- DIVIDER ---------------------
 
+        private int StartpointAssignment(int i)
+        {
+            int startPoint = 0; //the startpoint used by the player
+            switch (i)
+            {
+                case 0:
+                    startPoint = 0;
+                    break;
+                case 1:
+                    startPoint = 13;
+                    break;
+                case 2:
+                    startPoint = 26;
+                    break;
+                case 3:
+                    startPoint = 39;
+                    break;
+            }
+            return startPoint;
+        }
+
+        //--------------------- DIVIDER ---------------------
+
         //Creates the fields used in the game
         private void CreateField()
         {
-            //TODO make innerfields
             fields = new Field[57]; //creates the field array
 
             for(int i = 0; i < 57; i++)
@@ -168,7 +169,7 @@ namespace Ludo2
                 }
                 while (Console.ReadKey().KeyChar != 'k');
                 Console.WriteLine();
-                Console.WriteLine("You got: " + die.ThrowDice().ToString());
+                Console.WriteLine("You got: " + die.ThrowDice().ToString());//.tostring is completely useless
                 Console.WriteLine();
                 CanIMove(turn.GetTokens()); //Checks if the player can move
             }
@@ -176,6 +177,7 @@ namespace Ludo2
 
         //--------------------- DIVIDER ---------------------
 
+        //OPTIMIZE CanIMove
         //Checks if the player can move
         private void CanIMove(Token[] tokens)
         {
@@ -264,127 +266,68 @@ namespace Ludo2
         //--------------------- DIVIDER ---------------------
 
         //Moves the token
+        //OPTIMIZE MoveToField
         private void MoveToField(Player[] plr, int dieRoll)
         {
             foreach (Player pl in plr)
             {
                 Console.WriteLine("Player: " + pl.GetName() + " " + pl.GetId());
             }
-
-
-            //HIGHPRIORITY FIX CODE BELOW!!!!!!!!!!!
-
-            int tknId;
-            Token turnToken = null;
-
-            bool tmpBool = true;
-            while (tmpBool)
-            {
-
-                tknId = ChooseTokenToMove(); //Gets the id of the token to move
-
-                turnToken = plr[plrArrayId].GetToken(tknId); //Saves the token in a temporary object
-
-                if (turnToken.TokenState != TokenState.Finished || turnToken.TokenState != TokenState.Home)
-                {
-                    tmpBool = false;
-                }
-
-                Console.WriteLine("That token is unavailable to move");
-            }
+            Token turnToken = plr[plrArrayId].GetToken(ChooseTokenToMove());
 
             int fieldToRemove = turnToken.TokenPosition; //The field to remove the token from
             int fieldToMove = turnToken.TokenPosition + (die.GetValue()); //The field the token should move to
+            int dieCount = dieRoll;
+            int dieRest;
 
-            int startPos = turnToken.StartPosition; //The startposition of this token (all of this players tokens have the same startposition)
-
-            //TODO make innerfields code
-            #region Move the token to Safe
-            if (turnToken.Counter + dieRoll > 52)
+            while (dieCount > 0)
             {
-                //turnToken.TokenState = TokenState.Safe;
-                //int tempx = dieRoll + (turnToken.TokenPosition - 52);
-                //fieldToMove = 52 + tempx;
-
-
-                //TODO IMPLEMENT restOfDie
-                //int restOfDie = (turnToken.Counter + dieRoll) - 52;
-
-                //int lolReallyz = turnToken.TokenPosition 
-
-                int dieRest = (turnToken.TokenPosition + dieRoll) - fieldToRemove;
-
-                //int tknStpntStuff = (turnToken.StartPosition - 52) + turnToken.TokenPosition;
-
-                //int restOfDie = turnToken.Counter + dieRoll - tknStpntStuff;
+                if (turnToken.TokenState == TokenState.Home)
+                {
+                    dieCount = 0;
+                    turnToken.TokenState = TokenState.InPlay;
+                }
 
                 if (turnToken.Counter >= 57)
                 {
-                    turnToken.TokenState = TokenState.Finished;
                     fields[fieldToRemove].RemoveToken();
+                    turnToken.TokenState = TokenState.Finished;
                 }
-                else
+                else if (turnToken.Counter >= 52)
                 {
-                    MoveToken(turnToken, fieldToMove, fieldToRemove, dieRest);
-                }
-                #endregion
-                //TODO gonna get the remaining die numbers and then (hopefully) 'manually' move the token to the safeposition
-            }
-            else
-            {
+                    dieRest = dieCount;
+                    turnToken.TokenState = TokenState.Safe;
 
-                if (fieldToMove >= 52 && turnToken.TokenState == TokenState.InPlay)
-                {
-                    fieldToMove = turnToken.TokenPosition + (die.GetValue() - 51);
-                    MoveToken(turnToken, fieldToMove, fieldToRemove, dieRoll);
-                }
-                else
-                {
-                    turnToken.TokenState = TokenState.InPlay;
+                    fieldToMove = 52 + dieRest;
 
-                    switch (dieRoll)
-                    {
-                    case (6):
-                        if (turnToken.TokenState.Equals(TokenState.InPlay))
-                        {
-                            MoveToken(turnToken, fieldToMove, fieldToRemove, dieRoll);
-                        }
-                        else if (turnToken.TokenState.Equals(TokenState.Home))
-                        {
-                            MoveToken(turnToken, startPos, fieldToRemove, dieRoll);
-                        }
-                        else
-                        {
-                            MoveToken(turnToken, fieldToMove, fieldToRemove, dieRoll);
-                        }
-                        break;
-                    default:
-                        if (turnToken.TokenState == TokenState.InPlay || turnToken.TokenState == TokenState.Safe)
-                        {
-                            MoveToken(turnToken, fieldToMove, fieldToRemove, dieRoll);
-                        }
-                        else
-                        {
-                            Console.WriteLine("This Token Can't move.");
-                        }
-                        break;
-                    }
+                    dieCount = 0;
                 }
+                    fieldToMove = turnToken.TokenPosition + dieCount;
+                    dieCount--;
             }
-            Console.WriteLine("\n" + hasMoveSucceded); //Uncomment for debug
+
+            MoveToken(turnToken, fieldToMove, fieldToRemove);
         }
 
         //--------------------- DIVIDER ---------------------
 
         //Moves the token
-        private void MoveToken(Token token, int fieldToMove, int fieldToRemove, int dieRoll)
+        private void MoveToken(Token token, int fieldToMove, int fieldToRemove)
         {
 
-            //int tempxyzaeoeaa = 
+            //HIGHPRIORITY FIX CODE BELOW
 
-            token.Counter += die.GetValue();
+            if (token.TokenPosition != token.StartPosition)
+            {
+                token.Counter += die.GetValue();
+            }
 
-            if (token.TokenState == TokenState.Safe)
+            if (token.Counter >= 57)
+            {
+                token.TokenState = TokenState.Finished;
+                fields[fieldToRemove].RemoveToken();
+            }
+            else if (token.TokenState == TokenState.Safe)
             {
 
             }
@@ -392,7 +335,7 @@ namespace Ludo2
             {                
                 fields[fieldToRemove].RemoveToken();
 
-                hasMoveSucceded = fields[fieldToMove].PlaceToken(token, token.GetColor(), dieRoll);
+                hasMoveSucceded = fields[fieldToMove].PlaceToken(token, token.GetColor());
             }
         }
 
@@ -412,6 +355,7 @@ namespace Ludo2
             }
         }
         
+        //DEBUG remove later/remove in release
         //Gets a list of all the fields USED FOR DEBUGGING
         private void GetField()
         {
@@ -420,7 +364,6 @@ namespace Ludo2
                 Console.WriteLine(fi.GetFieldId() + " - " + fi.GetFieldColor());
             }
         }
-
         #endregion
     }
 }
