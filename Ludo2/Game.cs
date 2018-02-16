@@ -221,7 +221,7 @@ namespace Ludo2
                 }
                 Design.WriteLine("", 120);
             }
-            Design.WriteLine("<------------------------------------------------>", 4500);
+            Design.WriteLine("<------------------------------------------------>", 2500);
             Console.WriteLine("You have " + choice.ToString() + " options in this turn\n");
 
             if(choice == 0) //Cant do anything this turn skips the player
@@ -292,46 +292,56 @@ namespace Ludo2
 
             while (dieCount > 0)
             {
-                if (turnToken.TokenPosition + dieRoll >= 51)
+                if (turnToken.CanMove)
                 {
-                    turnToken.TokenPosition += dieRoll - 51;
-                }
 
-                if (turnToken.Counter + dieRoll >= 56) //If the token is out of the game
-                {
-                    fields[fieldToRemove].RemoveToken();
-                    turnToken.TokenState = TokenState.Finished; //The token is finished
-                }
-                else if (turnToken.Counter + dieRoll >= 51) //The token is in the safe field
-                {
-                    dieRest = dieCount;
-                    turnToken.Counter += dieRoll;
-                    if (turnToken.TokenState != TokenState.Safe)
+                    if (turnToken.TokenPosition + dieRoll >= 51)
                     {
-                        fieldToMove = 51 + dieRest;
-                        dieCount = 0;
-                        turnToken.TokenState = TokenState.Safe;
+                        turnToken.TokenPosition += dieRoll - 51;
+                    }
+
+                    if (turnToken.Counter + dieRoll >= 56) //If the token is out of the game
+                    {
+                        fields[fieldToRemove].RemoveToken();
+                        turnToken.TokenState = TokenState.Finished; //The token is finished
+                    }
+                    else if (turnToken.Counter + dieRoll >= 51) //The token is in the safe field
+                    {
+                        dieRest = dieCount;
+                        turnToken.Counter += dieRoll;
+                        if (turnToken.TokenState != TokenState.Safe)
+                        {
+                            fieldToMove = 51 + dieRest;
+                            dieCount = 0;
+                            turnToken.TokenState = TokenState.Safe;
+                        }
+                    }
+                    else
+                    {
+                        if (turnToken.TokenState == TokenState.Home && turnToken.CanMove) //The first move
+                        {
+                            dieCount = 0; //It shall not move away from the startposition
+                            turnToken.TokenState = TokenState.InPlay; //The token are now in the 'InPlay' state
+                            fieldToMove = turnToken.StartPosition;
+                        }
+                        else if (turnToken.CanMove)
+                        {
+                            turnToken.Counter += dieRoll;
+                            fieldToMove = turnToken.TokenPosition + (dieRoll - 1); //This line is NOT USELESS
+                            dieCount = 0;
+                        }
+                        //else
+                        //{
+                        //    Console.WriteLine("\nThats not a valid piece");
+                        //    MoveToField(plr, dieRoll); // Calls itself but fail to give a new value
+                        //}
                     }
                 }
                 else
                 {
-                    if (turnToken.TokenState == TokenState.Home && turnToken.CanMove) //The first move
-                    {
-                        dieCount = 0; //It shall not move away from the startposition
-                        turnToken.TokenState = TokenState.InPlay; //The token are now in the 'InPlay' state
-                        fieldToMove = turnToken.StartPosition;
-                    }
-                    else if (turnToken.CanMove)
-                    {
-                        turnToken.Counter += dieRoll;
-                        fieldToMove = turnToken.TokenPosition + (dieRoll - 1); //This line is NOT USELESS
-                        dieCount = 0;
-                    }
-                    else
-                    {
-                        Console.WriteLine("\nThats not a valid piece");
-                        MoveToField(plr, dieRoll); // Calls itself but fail to give a new value
-                    }
+                    Console.WriteLine("\nThats not a valid piece");
+                    dieCount = 0;
+                    MoveToField(plr, dieRoll); // Calls itself but fail to give a new value
                 }
             }
             MoveToken(turnToken, fieldToMove, fieldToRemove);
