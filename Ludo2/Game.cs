@@ -27,8 +27,8 @@ namespace Ludo2
 
             //IMPLEMENT Music
             //MusicHandler.DeathSound();
-            
 
+            Design.Clear(500);
             this.numberOfPlayers = SetNumberOfPlayers(); //Sets the number of players before the game begins
             CreatePlayers(); //This method creates the players
             CreateField(); //Creates the fields used in the game
@@ -53,7 +53,8 @@ namespace Ludo2
                 if (!int.TryParse(Console.ReadKey().KeyChar.ToString(), out numOfPlayers)) //Tries to save the input as 'this.numberOfPlayers'
                 {
                     Console.WriteLine(); //Makes a blank space
-                    Console.WriteLine("Unknown input, choose between 2 and 4\n");
+                    Design.Clear(160);
+                    Console.Write("Unknown input, choose between 2 and 4 players: ");
                 }
             }
             return numOfPlayers;
@@ -69,13 +70,13 @@ namespace Ludo2
             Console.WriteLine();
             for (int i = 0; i < this.numberOfPlayers; i++) //Runs until all users have names
             {
+                Design.Clear(300);
                 Console.Write("What is the name of player {0}: ", (i+1)); //Asks for the players name
                 string name = Console.ReadLine(); //saves the name as a temporary variable called 'name'
-
-                //int startpointAssign = StartpointAssignment(i); //Assigns the startpoint for each of the users
+                
                 Token[] token = TokenAssign(i); //Assigns the tokens for the different users
 
-                players[i] = new Player(name, (i + 1), token, token[i].StartPosition); //Defines the players
+                players[i] = new Player(name, (i + 1), token); //Defines the players
             }
         }
 
@@ -162,13 +163,16 @@ namespace Ludo2
             while(state == GameState.InPlay) //Checks if the game is on
             {
                 Player turn = players[(plrArrayId)]; //Finds the player in the array
+                Design.Clear(200);
                 Console.WriteLine("It is " + turn.GetName() + "'s turn\n"); //Some 'nice' output
                 do
                 {
+                    Design.Clear();
                     Console.Write("Press 'K' to roll the die: ");
                 }
                 while (Console.ReadKey().KeyChar != 'k');
                 Console.WriteLine();
+                Design.Clear(300);
                 Console.WriteLine("You got: " + die.ThrowDice().ToString());//.tostring is completely useless
                 Console.WriteLine();
                 CanIMove(turn.GetTokens()); //Checks if the player can move
@@ -181,37 +185,43 @@ namespace Ludo2
         //Checks if the player can move
         private void CanIMove(Token[] tokens)
         {
+            //IMPLEMENT Throw die more than once per player
+
             int choice = 0; //How many tokens can the player move
 
-            Console.WriteLine("Here are your tokens:\n");
-            foreach(Token tkn in tokens) //Begins to write the tokens of the player
+            Console.WriteLine("Here are your pieces:");
+            Design.WriteLine("", 70);
+            foreach (Token tkn in tokens) //Begins to write the tokens of the player
             {
-                Console.Write("Token number: " + tkn.GetTokenId() + " are placed: " + tkn.TokenState); //Writes the id and state of each of the tokens
-
-                switch(tkn.TokenState) //Begins to check if the player can do anything with his/hers tokens
+                Console.Write("piece number: " + tkn.GetTokenId() + " are placed: " + tkn.TokenState); //Writes the id and state of each of the tokens
+                switch (tkn.TokenState) //Begins to check if the player can do anything with his/hers tokens
                 {
                     case TokenState.Home:
                         if(die.GetValue() == 6)
                         {
                             Console.Write(" - Can move");
                             choice++; //Can move this token AKA a choice
+                            tkn.CanMove = true;
                         }
                         else
                         {
                             Console.Write(" - Can not move");
+                            tkn.CanMove = false;
                         }
                         break;
                     case TokenState.Finished:
                         Console.Write(" <- Is finished");
+                        tkn.CanMove = false;
                         break;
                     default:
                         Console.Write(" <- Can move : " + tkn.TokenPosition + " ");
                         choice++;
+                        tkn.CanMove = true;
                         break;
                 }
-                Console.WriteLine();
+                Design.WriteLine("", 120);
             }
-            Console.WriteLine();
+            Design.WriteLine("<------------------------------------------------>", 4500);
             Console.WriteLine("You have " + choice.ToString() + " options in this turn\n");
 
             if(choice == 0) //Cant do anything this turn skips the player
@@ -251,7 +261,7 @@ namespace Ludo2
         {
             int tokenToMove = 0; //Only used in this method
 
-            Console.WriteLine("Choose a token to move (Use a number between 1 and 4)");
+            Console.WriteLine("Choose a piece to move (Use a number between 1 and 4)");
             while (tokenToMove < 1 || tokenToMove > 4)
             {
                 if (!int.TryParse(Console.ReadKey().KeyChar.ToString(), out tokenToMove))
@@ -271,41 +281,59 @@ namespace Ludo2
         {
             foreach (Player pl in plr)
             {
-                Console.WriteLine("Player: " + pl.GetName() + " " + pl.GetId());
+                Console.WriteLine("Player: " + pl.GetName() + " " + pl.GetId() + "\n");
             }
             Token turnToken = plr[plrArrayId].GetToken(ChooseTokenToMove());
 
             int fieldToRemove = turnToken.TokenPosition; //The field to remove the token from
             int fieldToMove = turnToken.TokenPosition + (die.GetValue()); //The field the token should move to
-            int dieCount = dieRoll;
-            int dieRest;
+            int dieCount = dieRoll; //Temporary variable used to get and modify the dieRoll
+            int dieRest; //How many dots left on the die
 
             while (dieCount > 0)
             {
-                if (turnToken.TokenState == TokenState.Home)
+                if (turnToken.TokenPosition + dieRoll >= 51)
                 {
-                    dieCount = 0;
-                    turnToken.TokenState = TokenState.InPlay;
+                    turnToken.TokenPosition += dieRoll - 51;
                 }
 
-                if (turnToken.Counter >= 57)
+                if (turnToken.Counter + dieRoll >= 56) //If the token is out of the game
                 {
                     fields[fieldToRemove].RemoveToken();
-                    turnToken.TokenState = TokenState.Finished;
+                    turnToken.TokenState = TokenState.Finished; //The token is finished
                 }
-                else if (turnToken.Counter >= 52)
+                else if (turnToken.Counter + dieRoll >= 51) //The token is in the safe field
                 {
                     dieRest = dieCount;
-                    turnToken.TokenState = TokenState.Safe;
-
-                    fieldToMove = 52 + dieRest;
-
-                    dieCount = 0;
+                    turnToken.Counter += dieRoll;
+                    if (turnToken.TokenState != TokenState.Safe)
+                    {
+                        fieldToMove = 51 + dieRest;
+                        dieCount = 0;
+                        turnToken.TokenState = TokenState.Safe;
+                    }
                 }
-                    fieldToMove = turnToken.TokenPosition + dieCount;
-                    dieCount--;
+                else
+                {
+                    if (turnToken.TokenState == TokenState.Home && turnToken.CanMove) //The first move
+                    {
+                        dieCount = 0; //It shall not move away from the startposition
+                        turnToken.TokenState = TokenState.InPlay; //The token are now in the 'InPlay' state
+                        fieldToMove = turnToken.StartPosition;
+                    }
+                    else if (turnToken.CanMove)
+                    {
+                        turnToken.Counter += dieRoll;
+                        fieldToMove = turnToken.TokenPosition + (dieRoll - 1); //This line is NOT USELESS
+                        dieCount = 0;
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nThats not a valid piece");
+                        MoveToField(plr, dieRoll); // Calls itself but fail to give a new value
+                    }
+                }
             }
-
             MoveToken(turnToken, fieldToMove, fieldToRemove);
         }
 
@@ -313,30 +341,11 @@ namespace Ludo2
 
         //Moves the token
         private void MoveToken(Token token, int fieldToMove, int fieldToRemove)
-        {
+        {          
+            fields[fieldToRemove].RemoveToken();
 
-            //HIGHPRIORITY FIX CODE BELOW
-
-            if (token.TokenPosition != token.StartPosition)
-            {
-                token.Counter += die.GetValue();
-            }
-
-            if (token.Counter >= 57)
-            {
-                token.TokenState = TokenState.Finished;
-                fields[fieldToRemove].RemoveToken();
-            }
-            else if (token.TokenState == TokenState.Safe)
-            {
-
-            }
-            else
-            {                
-                fields[fieldToRemove].RemoveToken();
-
-                hasMoveSucceded = fields[fieldToMove].PlaceToken(token, token.GetColor());
-            }
+            hasMoveSucceded = fields[fieldToMove].PlaceToken(token, token.GetColor());
+            
         }
 
         #region Getters
@@ -346,7 +355,7 @@ namespace Ludo2
         {
             foreach(Player pl in players)
             {
-                Console.WriteLine("#" + pl.GetName() + " - " + pl.GetColor() + " - " + pl.GetStartpoint());
+                Console.WriteLine("#" + pl.GetName() + " - " + pl.GetColor() + " - " + pl.GetToken(1).StartPosition);
 
                 for (int i = 0; i < 4; i++)
                 {
