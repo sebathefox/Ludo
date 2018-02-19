@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Ludo2
@@ -18,6 +19,10 @@ namespace Ludo2
         private Player[] players; //defines the array of players
         private int plrArrayId = 0; //Defines the player's turn
         private Field[] fields; //Defines the fields in the game
+
+        private int tries = 1;
+
+        int delay = 120;
 
         Dice die = new Dice(); //Makes an object of the class 'Dice'
 
@@ -155,7 +160,7 @@ namespace Ludo2
 
         #endregion
 
-        //--------------------- DIVIDER ---------------------
+        #region MainGameplay
 
         //Each players turn
         private void Turn()
@@ -163,17 +168,17 @@ namespace Ludo2
             while(state == GameState.InPlay) //Checks if the game is on
             {
                 Player turn = players[(plrArrayId)]; //Finds the player in the array
-                Design.Clear(200);
+                Design.Clear(delay);
                 Console.WriteLine("It is " + turn.GetName() + "'s turn\n"); //Some 'nice' output
                 do
                 {
-                    Design.Clear();
+                    //Design.Clear();
                     Console.Write("Press 'K' to roll the die: ");
                 }
                 while (Console.ReadKey().KeyChar != 'k');
                 Console.WriteLine();
-                Design.Clear(300);
-                Console.WriteLine("You got: " + die.ThrowDice().ToString());//.tostring is completely useless
+                Design.Clear(delay);
+                Console.WriteLine("You got: " + die.ThrowDice());
                 Console.WriteLine();
                 CanIMove(turn.GetTokens()); //Checks if the player can move
             }
@@ -190,7 +195,7 @@ namespace Ludo2
             int choice = 0; //How many tokens can the player move
 
             Console.WriteLine("Here are your pieces:");
-            Design.WriteLine("", 70);
+            Design.WriteLine("", delay);
             foreach (Token tkn in tokens) //Begins to write the tokens of the player
             {
                 Console.Write("piece number: " + tkn.GetTokenId() + " are placed: " + tkn.TokenState); //Writes the id and state of each of the tokens
@@ -219,10 +224,18 @@ namespace Ludo2
                         tkn.CanMove = true;
                         break;
                 }
-                Design.WriteLine("", 120);
+                Design.WriteLine("", delay);
             }
-            Design.WriteLine("<------------------------------------------------>", 2500);
-            Console.WriteLine("You have " + choice.ToString() + " options in this turn\n");
+            Design.WriteLine("<------------------------------------------------>");
+            Console.WriteLine(tokens[0].GetColor().ToString() + " have " + choice.ToString() + " options in this turn\n");
+
+            if (tries < 3 && die.GetValue() < 6 && choice == 0)
+            {
+                tries++;
+                Turn();
+            }
+
+            tries = 0;
 
             if(choice == 0) //Cant do anything this turn skips the player
             {
@@ -254,7 +267,7 @@ namespace Ludo2
             Turn();
         }
 
-        //--------------------- DIVIDER ---------------------
+        #endregion
 
         //Lets the player choose the token to move
         private int ChooseTokenToMove()
@@ -272,8 +285,6 @@ namespace Ludo2
             }
             return tokenToMove -1;
         }
-
-        //--------------------- DIVIDER ---------------------
 
         //Moves the token
         //OPTIMIZE MoveToField
@@ -294,16 +305,16 @@ namespace Ludo2
             {
                 if (turnToken.CanMove)
                 {
-
-                    if (turnToken.TokenPosition + dieRoll >= 51)
+                    if (turnToken.TokenPosition + dieRoll >= 51 && turnToken.TokenState != TokenState.Safe)
                     {
                         turnToken.TokenPosition += dieRoll - 51;
                     }
 
                     if (turnToken.Counter + dieRoll >= 56) //If the token is out of the game
                     {
-                        fields[fieldToRemove].RemoveToken();
+                        fields[( fieldToRemove - 1)].RemoveToken();
                         turnToken.TokenState = TokenState.Finished; //The token is finished
+                        dieCount = 0;
                     }
                     else if (turnToken.Counter + dieRoll >= 51) //The token is in the safe field
                     {
@@ -330,11 +341,6 @@ namespace Ludo2
                             fieldToMove = turnToken.TokenPosition + (dieRoll - 1); //This line is NOT USELESS
                             dieCount = 0;
                         }
-                        //else
-                        //{
-                        //    Console.WriteLine("\nThats not a valid piece");
-                        //    MoveToField(plr, dieRoll); // Calls itself but fail to give a new value
-                        //}
                     }
                 }
                 else
@@ -344,23 +350,31 @@ namespace Ludo2
                     MoveToField(plr, dieRoll); // Calls itself but fail to give a new value
                 }
             }
-            MoveToken(turnToken, fieldToMove, fieldToRemove);
-        }
 
-        //--------------------- DIVIDER ---------------------
+            if (turnToken.TokenState != TokenState.Finished)
+                MoveToken(turnToken, fieldToMove, fieldToRemove);
+        }
 
         //Moves the token
         private void MoveToken(Token token, int fieldToMove, int fieldToRemove)
-        {          
-            fields[fieldToRemove].RemoveToken();
+        {
+            if (fieldToMove > 56)
+            {
 
-            hasMoveSucceded = fields[fieldToMove].PlaceToken(token, token.GetColor());
-            
+            }
+            else
+            {
+                hasMoveSucceded = fields[fieldToMove].PlaceToken(token, token.GetColor());
+                if ((token.TokenPosition) != token.StartPosition)
+                {
+                    fields[(fieldToRemove)].RemoveToken();
+                }
+            }
         }
 
         #region Getters
 
-        //Gets a list of all the players
+        //Gets a list of all the players (Currently not in use)
         private void GetPlayers()
         {
             foreach(Player pl in players)
@@ -374,13 +388,12 @@ namespace Ludo2
             }
         }
         
-        //DEBUG remove later/remove in release
         //Gets a list of all the fields USED FOR DEBUGGING
         private void GetField()
         {
             foreach(Field fi in this.fields)
             {
-                Console.WriteLine(fi.GetFieldId() + " - " + fi.GetFieldColor());
+                fi.ToString();
             }
         }
         #endregion

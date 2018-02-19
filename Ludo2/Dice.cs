@@ -29,5 +29,10 @@ namespace Ludo2
         {
             return this.diceValue;
         }
+
+        public override string ToString()
+        {
+            return "Value: " + diceValue;
+        }
     }
 }

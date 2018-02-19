@@ -21,7 +21,7 @@ namespace Ludo2
             this.tokenId = tokenId;
             this.color = color;
             this.state = TokenState.Home; //sets the default state to 'Home'
-            this.startPosition = startPos;
+            this.startPosition = this.positionId =  startPos;
             this.canMove = false;
         }
 
@@ -42,5 +42,10 @@ namespace Ludo2
         public int Counter { get => this.positionCounter; set => this.positionCounter = value; }
 
         public bool CanMove { get => this.canMove; set => this.canMove = value; }
+
+        public override string ToString()
+        {
+            return "PieceId: " + GetTokenId() + ", Color: " + GetColor();
+        }
     }
 }

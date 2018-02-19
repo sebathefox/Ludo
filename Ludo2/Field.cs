@@ -50,7 +50,7 @@ namespace Ludo2
 
         }
 
-        private void PlToken(Token token)
+        public void PlToken(Token token)
         {
             tokensList.Add(token);
             this.color = token.GetColor();
@@ -66,10 +66,8 @@ namespace Ludo2
             }
         }
 
-        private void KillToken(Token token)
+        public void KillToken(Token token)
         {
-            
-
             MusicHandler.DeathSound();
 
             token.TokenPosition = token.StartPosition;
@@ -84,5 +82,12 @@ namespace Ludo2
 
         //Gets the id of the field
         public int GetFieldId() => this.fieldId;
+
+        public List<Token> TokensOnField { get => tokensList; set => tokensList = value; }
+
+        public override string ToString()
+        {
+            return "FieldId: " + GetFieldId() + ", FieldColor: " + GetFieldColor();
+        }
     }
 }
