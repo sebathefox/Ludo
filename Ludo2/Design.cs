@@ -22,5 +22,22 @@ namespace Ludo2
             Console.WriteLine(text);
             Thread.Sleep(delay); //Delays the next output
         }
+
+        public static void Write(string text, int delay = 0)
+        {
+            Console.Write(text);
+            Thread.Sleep(delay); //Delays the next output
+        }
+
+        public static void SlowPrint(string input, int delay)
+        {
+            input.ToCharArray();
+
+            foreach (char cha in input)
+            {
+                Write(cha.ToString());
+                Thread.Sleep(delay);
+            }
+        }
     }
 }

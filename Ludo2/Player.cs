@@ -21,6 +21,8 @@ namespace Ludo2
             this.color = this.tokens[0].GetColor();
         }
 
+        #region Properties/GetterMethods
+
         /// <summary>
         /// Gets the id of the player object
         /// </summary>
@@ -45,5 +47,7 @@ namespace Ludo2
         /// Gets a single array from the token array
         /// </summary>
         public Token GetToken(int tknid) => this.tokens[tknid];
+
+        #endregion
     }
 }

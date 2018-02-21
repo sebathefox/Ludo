@@ -75,7 +75,7 @@ namespace Ludo2
             token.Counter = 0;
         }
 
-        //---------------- Getters ----------------
+        #region Properties/GetterMethods
 
         //Gets the color of the field
         public GameColor GetFieldColor() => this.color;
@@ -84,6 +84,8 @@ namespace Ludo2
         public int GetFieldId() => this.fieldId;
 
         public List<Token> TokensOnField { get => tokensList; set => tokensList = value; }
+
+        #endregion
 
         public override string ToString()
         {

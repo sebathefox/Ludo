@@ -25,7 +25,7 @@ namespace Ludo2
             this.canMove = false;
         }
 
-        //---------------- Getters ----------------
+        #region Properties/GetterMethods
 
         //Gets the id of the currently selected token
         public int GetTokenId() => this.tokenId;
@@ -42,6 +42,8 @@ namespace Ludo2
         public int Counter { get => this.positionCounter; set => this.positionCounter = value; }
 
         public bool CanMove { get => this.canMove; set => this.canMove = value; }
+
+        #endregion
 
         public override string ToString()
         {

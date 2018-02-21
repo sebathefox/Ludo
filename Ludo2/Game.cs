@@ -20,7 +20,7 @@ namespace Ludo2
         private int plrArrayId = 0; //Defines the player's turn
         private Field[] fields; //Defines the fields in the game
 
-        private int tries = 1;
+        private int tries = 0;
 
         int delay = 120;
 
@@ -29,10 +29,6 @@ namespace Ludo2
         //---------------- Constructor ----------------
         public Game()
         {
-
-            //IMPLEMENT Music
-            //MusicHandler.DeathSound();
-
             Design.Clear(500);
             this.numberOfPlayers = SetNumberOfPlayers(); //Sets the number of players before the game begins
             CreatePlayers(); //This method creates the players
@@ -92,7 +88,7 @@ namespace Ludo2
         {
             Token[] tokens = new Token[4]; //Makes a new array
 
-            int startPos = StartpointAssignment(index);
+            int startPos = StartpointAssign(index);
 
             int endPos = startPos - 2;
 
@@ -124,7 +120,7 @@ namespace Ludo2
 
         //--------------------- DIVIDER ---------------------
 
-        private int StartpointAssignment(int i)
+        private int StartpointAssign(int i)
         {
             int startPoint = 0; //the startpoint used by the player
             switch (i)
@@ -180,7 +176,7 @@ namespace Ludo2
                 Design.Clear(delay);
                 Console.WriteLine("You got: " + die.ThrowDice());
                 Console.WriteLine();
-                CanIMove(turn.GetTokens()); //Checks if the player can move
+                CanMove(turn); //Checks if the player can move
             }
         }
 
@@ -188,11 +184,12 @@ namespace Ludo2
 
         //OPTIMIZE CanIMove
         //Checks if the player can move
-        private void CanIMove(Token[] tokens)
+        private void CanMove(Player turn)
         {
-            //IMPLEMENT Throw die more than once per player
+            Token[] tokens = turn.GetTokens();
 
             int choice = 0; //How many tokens can the player move
+            int finish = 0;
 
             Console.WriteLine("Here are your pieces:");
             Design.WriteLine("", delay);
@@ -217,6 +214,7 @@ namespace Ludo2
                     case TokenState.Finished:
                         Console.Write(" <- Is finished");
                         tkn.CanMove = false;
+                        finish++;
                         break;
                     default:
                         Console.Write(" <- Can move : " + tkn.TokenPosition + " ");
@@ -226,12 +224,19 @@ namespace Ludo2
                 }
                 Design.WriteLine("", delay);
             }
+
+            if (finish >= 4)
+            {
+                Finish(turn);
+            }
+
             Design.WriteLine("<------------------------------------------------>");
             Console.WriteLine(tokens[0].GetColor().ToString() + " have " + choice.ToString() + " options in this turn\n");
 
+            tries++;
+
             if (tries < 3 && die.GetValue() < 6 && choice == 0)
             {
-                tries++;
                 Turn();
             }
 
@@ -269,10 +274,12 @@ namespace Ludo2
 
         #endregion
 
+        #region Movement
+
         //Lets the player choose the token to move
         private int ChooseTokenToMove()
         {
-            int tokenToMove = 0; //Only used in this method
+            int tokenToMove = 0; //Temporary variable
 
             Console.WriteLine("Choose a piece to move (Use a number between 1 and 4)");
             while (tokenToMove < 1 || tokenToMove > 4)
@@ -354,15 +361,21 @@ namespace Ludo2
             if (turnToken.TokenState != TokenState.Finished)
                 MoveToken(turnToken, fieldToMove, fieldToRemove);
         }
-
+        
         //Moves the token
         private void MoveToken(Token token, int fieldToMove, int fieldToRemove)
         {
-            if (fieldToMove > 56)
+            if (fieldToMove == token.StartPosition && fields[fieldToMove].GetFieldColor() != GameColor.None)
             {
+                //Get angry;)
 
+                Token tempToken = fields[fieldToMove].TokensOnField[0];
+
+                fields[fieldToMove].KillToken(tempToken);
+                fields[(fieldToMove)].RemoveToken();
             }
-            else
+
+            if (fieldToMove <= 56)
             {
                 hasMoveSucceded = fields[fieldToMove].PlaceToken(token, token.GetColor());
                 if ((token.TokenPosition) != token.StartPosition)
@@ -370,6 +383,17 @@ namespace Ludo2
                     fields[(fieldToRemove)].RemoveToken();
                 }
             }
+        }
+
+        #endregion
+
+        private void Finish(Player winner)
+        {
+            Design.SlowPrint("Player" + winner.GetName() + "Has won the game!", 70);
+            Design.WriteLine("Press 'Any Key' to exit (ONLY that key will work)");
+            Console.ReadKey();
+
+            Environment.Exit(0);
         }
 
         #region Getters

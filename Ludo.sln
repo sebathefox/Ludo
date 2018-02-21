@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LudoGui", "LudoGui\LudoGui.csproj", "{C7DF55F3-58C6-4871-BABC-40410A9E3D4D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C7DF55F3-58C6-4871-BABC-40410A9E3D4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7DF55F3-58C6-4871-BABC-40410A9E3D4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7DF55F3-58C6-4871-BABC-40410A9E3D4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7DF55F3-58C6-4871-BABC-40410A9E3D4D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AE092514-EF99-4625-8532-89E87B5F98A6}
+	EndGlobalSection
+EndGlobal
