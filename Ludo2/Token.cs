@@ -7,13 +7,17 @@ namespace Ludo2
 
     public class Token
     {
+        #region Fields
+
+        private readonly int startPosition;
         private readonly int tokenId; // the unique id of the token
         private readonly GameColor color; //The color of the token
-        private TokenState state; //Defines if the token is Home, safe or in play
-        private int positionId; //defines the position of the tokens
-        private readonly int startPosition;
         private int positionCounter = 0;
+        private int positionId; //defines the position of the tokens
+        private TokenState state; //Defines if the token is Home, safe or in play
         private bool canMove;
+
+        #endregion
 
         //---------------- Constructor ----------------
         public Token(int tokenId, GameColor color, int startPos, int SafePos)

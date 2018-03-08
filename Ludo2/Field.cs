@@ -7,9 +7,13 @@ namespace Ludo2
 
     public class Field
     {
+        #region Fields
+
         private GameColor color; //used if there is a token on the field
         private readonly int fieldId; //Every field needs an id
         private List<Token> tokensList = new List<Token>(); //creates an List to hold up to four tokens at the same time
+
+        #endregion
 
         //---------------- Constructor ----------------
         public Field(int fieldId, GameColor color = GameColor.None)
@@ -19,7 +23,7 @@ namespace Ludo2
         }
 
         //Places the token on the field
-        public bool PlaceToken(Token token, GameColor color/*, int dieRoll*/)
+        public bool PlaceToken(Token token, GameColor color)
         {
             if (tokensList.Count > 1)
             {

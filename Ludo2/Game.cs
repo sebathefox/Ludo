@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Ludo2
@@ -10,25 +11,29 @@ namespace Ludo2
 
     public class Game
     {
-        
+
+        #region Fields
+
         private GameState state; //Defines a gamestate variable
-
-        private bool hasMoveSucceded; //Debug purpose
-
+        
         private readonly int numberOfPlayers; //Defines the number of players in the game
-        private Player[] players; //defines the array of players
         private int plrArrayId = 0; //Defines the player's turn
-        private Field[] fields; //Defines the fields in the game
-
         private int tries = 0;
+        private readonly int delay = 120;
 
-        int delay = 120;
+        private Player[] players; //defines the array of players
+        private Field[] fields; //Defines the fields in the game
+        private Dice die = new Dice(); //Makes an object of the class 'Dice'
 
-        Dice die = new Dice(); //Makes an object of the class 'Dice'
+        #endregion
 
         //---------------- Constructor ----------------
         public Game()
         {
+            #if DEBUG
+                Debug.WriteLine("DEBUGMODE");
+            #endif
+
             Design.Clear(500);
             this.numberOfPlayers = SetNumberOfPlayers(); //Sets the number of players before the game begins
             CreatePlayers(); //This method creates the players
@@ -58,6 +63,9 @@ namespace Ludo2
                     Console.Write("Unknown input, choose between 2 and 4 players: ");
                 }
             }
+
+            PrintLog("NumberOfPlayers: " + numOfPlayers);
+
             return numOfPlayers;
         }
 
@@ -78,6 +86,9 @@ namespace Ludo2
                 Token[] token = TokenAssign(i); //Assigns the tokens for the different users
 
                 players[i] = new Player(name, (i + 1), token); //Defines the players
+
+                PrintLog("Player " + i + " name: " + name);
+
             }
         }
 
@@ -303,7 +314,7 @@ namespace Ludo2
             }
             Token turnToken = plr[plrArrayId].GetToken(ChooseTokenToMove());
 
-            int fieldToRemove = turnToken.TokenPosition; //The field to remove the token from
+            int fieldToRemove = turnToken.TokenPosition - 1; //The field to remove the token from
             int fieldToMove = turnToken.TokenPosition + (die.GetValue()); //The field the token should move to
             int dieCount = dieRoll; //Temporary variable used to get and modify the dieRoll
             int dieRest; //How many dots left on the die
@@ -367,7 +378,6 @@ namespace Ludo2
         {
             if (fieldToMove == token.StartPosition && fields[fieldToMove].GetFieldColor() != GameColor.None)
             {
-                //Get angry;)
 
                 Token tempToken = fields[fieldToMove].TokensOnField[0];
 
@@ -377,9 +387,15 @@ namespace Ludo2
 
             if (fieldToMove <= 56)
             {
-                hasMoveSucceded = fields[fieldToMove].PlaceToken(token, token.GetColor());
+                fields[fieldToMove].PlaceToken(token, token.GetColor());
                 if ((token.TokenPosition) != token.StartPosition)
                 {
+                    if (fieldToRemove < 0)
+                    {
+                        fieldToRemove = 0;
+                    }
+
+
                     fields[(fieldToRemove)].RemoveToken();
                 }
             }
@@ -394,6 +410,12 @@ namespace Ludo2
             Console.ReadKey();
 
             Environment.Exit(0);
+        }
+
+        [Conditional("DEBUG")]
+        private void PrintLog(string dataLog)
+        {
+            Debug.WriteLine(dataLog);
         }
 
         #region Getters

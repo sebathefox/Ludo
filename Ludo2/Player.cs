@@ -5,10 +5,15 @@ namespace Ludo2
 {
     public class Player
     {
+        #region Fields
+
         private readonly string name; //The name of the player
         private readonly int playerId; //A unique id to this player only
-        private readonly Token[] tokens; //A array with the tokens the player uses in the game
         private readonly GameColor color; // the color of the player
+
+        private readonly Token[] tokens; //A array with the tokens the player uses in the game
+
+        #endregion
 
         /// <summary>
         /// Creates a new Player object that can be used in the game
