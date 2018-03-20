@@ -5,7 +5,11 @@ namespace Ludo2
 {
     static class Design //This class is used for the "frontend" code to make the game look nicer to the user
     {
-        //Used to clear the console and write ludo on the top
+        /// <summary>
+        /// Makes a nice header
+        /// </summary>
+        /// <param name="delay">Delay in milliseconds</param>
+        /// <param name="header">data to write in string</param>
         public static void Clear(int delay = 0, string header = "<--------------------- LUDO --------------------->")
         {
             Console.Clear(); //Clears the console
@@ -15,20 +19,32 @@ namespace Ludo2
         }
 
         /// <summary>
-        /// Output with the possibility of a delay
+        /// Console.WriteLine but with the possibility of a delay
         /// </summary>
+        /// <param name="text">Data to write</param>
+        /// <param name="delay">Delay in milliseconds</param>
         public static void WriteLine(string text, int delay = 0)
         {
             Console.WriteLine(text);
             Thread.Sleep(delay); //Delays the next output
         }
 
+        /// <summary>
+        /// Console.Write but with the possibility of a delay
+        /// </summary>
+        /// <param name="text">Data to write</param>
+        /// <param name="delay">Delay in milliseconds</param>
         public static void Write(string text, int delay = 0)
         {
             Console.Write(text);
             Thread.Sleep(delay); //Delays the next output
         }
 
+        /// <summary>
+        /// Slowly prints text to the screen
+        /// </summary>
+        /// <param name="input">Data to write</param>
+        /// <param name="delay">Delay in milliseconds</param>
         public static void SlowPrint(string input, int delay)
         {
             input.ToCharArray();

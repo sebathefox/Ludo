@@ -5,7 +5,7 @@ namespace Ludo2
 {
     public class Dice
     {
-        private int diceValue; //The variable to hold the value of the ThrowDice
+        //private int diceValue; //The variable to hold the value of the ThrowDice
 
         //---------------- Constructor ----------------
         public Dice()
@@ -19,20 +19,19 @@ namespace Ludo2
         {
             Random rand = new Random(); //Creates a new object from the class 'Random'
 
-            this.diceValue = rand.Next(1, 7); //gets a random value from 1 - 6
+            this.GetValue = rand.Next(1, 7); //gets a random value from 1 - 6
 
-            return this.diceValue;
+            return this.GetValue;
         }
 
-        //Gets the value of the last throw
-        public int GetValue()
-        {
-            return this.diceValue;
-        }
+        /// <summary>
+        /// Gets the value of the last throw
+        /// </summary>
+        public int GetValue { get; private set; }
 
         public override string ToString()
         {
-            return "Value: " + diceValue;
+            return "Value: " + this.GetValue;
         }
     }
 }

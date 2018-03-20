@@ -5,20 +5,12 @@ namespace Ludo2
 {
     static class MusicHandler
     {
-
-        //Probably won't use
-        //Soundtrack to play through the game
-        public static void SoundTrack()
-        {
-            System.Media.SoundPlayer soundTrack = new System.Media.SoundPlayer(Directory.GetCurrentDirectory() + "/Music/SoundTrack.wav");
-            soundTrack.PlayLooping();
-        }
-
         //Sound to play when a token gets killed
         public static void DeathSound()
         {
+            //Creates a new audio player
             System.Media.SoundPlayer player = new System.Media.SoundPlayer(Directory.GetCurrentDirectory() + "/Music/Death.wav");
-            player.Play();
+            player.Play(); //starts the audio
         }
     }
 }

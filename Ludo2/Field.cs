@@ -8,18 +8,17 @@ namespace Ludo2
     public class Field
     {
         #region Fields
-
-        private GameColor color; //used if there is a token on the field
+        
         private readonly int fieldId; //Every field needs an id
         private List<Token> tokensList = new List<Token>(); //creates an List to hold up to four tokens at the same time
 
         #endregion
 
         //---------------- Constructor ----------------
-        public Field(int fieldId, GameColor color = GameColor.None)
+        public Field(int fieldId, GameColor color = GameColor.White)
         {
             this.fieldId = fieldId;
-            this.color = color;
+            this.Color = color;
         }
 
         //Places the token on the field
@@ -27,7 +26,7 @@ namespace Ludo2
         {
             if (tokensList.Count > 1)
             {
-                if (token.GetColor() != this.color)
+                if (token.Color != this.Color)
                 {
                     KillToken(token); //Kills the token that moved because there was more than 1 enemy token
                     return false;
@@ -40,7 +39,7 @@ namespace Ludo2
             }
             else if (tokensList.Count == 0)
             {
-                if (token.GetColor() != this.color && this.color != GameColor.None)
+                if (token.Color != this.Color && this.Color != GameColor.White)
                 {
                     KillToken(this.tokensList.ElementAt(0)); //Kills the already placed token
                     RemoveToken();
@@ -51,19 +50,18 @@ namespace Ludo2
             }
             PlToken(token);
             return true;
-
         }
 
         public void PlToken(Token token)
         {
             tokensList.Add(token);
-            this.color = token.GetColor();
-            token.TokenPosition = this.fieldId;
+            this.Color = token.Color;
+            token.Position = this.fieldId;
         }
 
         public void RemoveToken()
         {
-            this.color = GameColor.None;
+            this.Color = GameColor.White;
             for (int i = 0; i < (this.tokensList.Count); i++)
             {
                 this.tokensList.RemoveAt(i);
@@ -74,26 +72,34 @@ namespace Ludo2
         {
             MusicHandler.DeathSound();
 
-            token.TokenPosition = token.StartPosition;
-            token.TokenState = TokenState.Home;
+            token.Position = token.StartPosition;
+            token.State = TokenState.Home;
             token.Counter = 0;
         }
 
         #region Properties/GetterMethods
 
-        //Gets the color of the field
-        public GameColor GetFieldColor() => this.color;
+        /// <summary>
+        /// Gets the color of the field
+        /// </summary>
+        public GameColor Color { get; set; }
 
-        //Gets the id of the field
+        /// <summary>
+        /// Gets the id of the field
+        /// </summary>
+        /// <returns></returns>
         public int GetFieldId() => this.fieldId;
 
+        /// <summary>
+        /// Gets a List with the tokens currently positioned at this field
+        /// </summary>
         public List<Token> TokensOnField { get => tokensList; set => tokensList = value; }
 
         #endregion
 
         public override string ToString()
         {
-            return "FieldId: " + GetFieldId() + ", FieldColor: " + GetFieldColor();
+            return "FieldId: " + GetFieldId() + ", FieldColor: " + Color;
         }
     }
 }

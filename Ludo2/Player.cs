@@ -5,25 +5,16 @@ namespace Ludo2
 {
     public class Player
     {
-        #region Fields
-
-        private readonly string name; //The name of the player
-        private readonly int playerId; //A unique id to this player only
-        private readonly GameColor color; // the color of the player
-
         private readonly Token[] tokens; //A array with the tokens the player uses in the game
-
-        #endregion
 
         /// <summary>
         /// Creates a new Player object that can be used in the game
         /// </summary>
         public Player(string name, int playerId, Token[] tokens)
         {
-            this.name = name;
-            this.playerId = playerId;
+            this.Name = name;
+            this.Id = playerId;
             this.tokens = tokens;
-            this.color = this.tokens[0].GetColor();
         }
 
         #region Properties/GetterMethods
@@ -31,17 +22,17 @@ namespace Ludo2
         /// <summary>
         /// Gets the id of the player object
         /// </summary>
-        public int GetId() => this.playerId;
+        public int Id { get; private set; }
 
         /// <summary>
         /// Gets the name of the player object
         /// </summary>
-        public string GetName() => this.name;
+        public string Name { get; private set; }
 
         /// <summary>
         /// Gets the color of the player object
         /// </summary>
-        public GameColor GetColor() => this.color;
+        public GameColor Color { get => this.tokens[0].Color; }
         
         /// <summary>
         /// Gets the array with the players tokens

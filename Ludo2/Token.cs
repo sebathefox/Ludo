@@ -7,51 +7,56 @@ namespace Ludo2
 
     public class Token
     {
-        #region Fields
-
-        private readonly int startPosition;
-        private readonly int tokenId; // the unique id of the token
-        private readonly GameColor color; //The color of the token
-        private int positionCounter = 0;
-        private int positionId; //defines the position of the tokens
-        private TokenState state; //Defines if the token is Home, safe or in play
-        private bool canMove;
-
-        #endregion
-
         //---------------- Constructor ----------------
         public Token(int tokenId, GameColor color, int startPos, int SafePos)
         {
-            this.tokenId = tokenId;
-            this.color = color;
-            this.state = TokenState.Home; //sets the default state to 'Home'
-            this.startPosition = this.positionId =  startPos;
-            this.canMove = false;
+            this.Id = tokenId;
+            this.Color = color;
+            this.State = TokenState.Home; //sets the default state to 'Home'
+            this.StartPosition = this.Position =  startPos;
+            this.CanMove = false;
         }
 
-        #region Properties/GetterMethods
+        #region Properties
 
         //Gets the id of the currently selected token
-        public int GetTokenId() => this.tokenId;
+        public int Id { get; private set; }
 
-        //Gets the color of the currently selected token
-        public GameColor GetColor() => this.color;
+        /// <summary>
+        /// Gets the current color returned in GameColor (ReadOnly)
+        /// </summary>
+        public GameColor Color { get; private set; }
 
-        public TokenState TokenState { get => state; set => state = value; }
+        /// <summary>
+        /// Gets the current state returned in TokenState
+        /// </summary>
+        public TokenState State { get; set; }
 
-        public int TokenPosition { get => positionId; set => positionId = value; }
+        /// <summary>
+        /// Gets the current position
+        /// </summary>
+        public int Position { get; set; }
 
-        public int StartPosition { get => startPosition; }
+        /// <summary>
+        /// Gets the startposition
+        /// </summary>
+        public int StartPosition { get; }
 
-        public int Counter { get => this.positionCounter; set => this.positionCounter = value; }
+        /// <summary>
+        /// Count up to 52? then moves token to safe
+        /// </summary>
+        public int Counter { get; set; }
 
-        public bool CanMove { get => this.canMove; set => this.canMove = value; }
+        /// <summary>
+        /// If true the token can move else false
+        /// </summary>
+        public bool CanMove { get; set; }
 
         #endregion
 
         public override string ToString()
         {
-            return "PieceId: " + GetTokenId() + ", Color: " + GetColor();
+            return "PieceId: " + Id + ", Color: " + Color;
         }
     }
 }
