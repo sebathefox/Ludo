@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace Ludo2
 {
@@ -8,7 +7,7 @@ namespace Ludo2
     public class Token
     {
         //---------------- Constructor ----------------
-        public Token(int tokenId, GameColor color, int startPos, int SafePos)
+        public Token(int tokenId, GameColor color, int startPos)
         {
             this.Id = tokenId;
             this.Color = color;

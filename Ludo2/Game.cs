@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Ludo2
 {
@@ -33,7 +31,6 @@ namespace Ludo2
             CreatePlayers(); //This method creates the players
             CreateField(); //Creates the fields used in the game
             GetPlayers();
-            GetField(); //Only runs in debug mode
             Turn(); //Begins player one's turn
         }
 
@@ -90,16 +87,16 @@ namespace Ludo2
                 switch (index) //gives the same color to the tokens as the player
                 {
                     case 0:
-                        tokens[i] = new Token((i + 1), GameColor.Yellow, 0, 50); //Defines the color for the token
+                        tokens[i] = new Token((i + 1), GameColor.Yellow, 0); //Defines the color for the token
                         break;
                     case 1:
-                        tokens[i] = new Token((i + 1), GameColor.Blue, 13, 11); //Defines the color for the token
+                        tokens[i] = new Token((i + 1), GameColor.Blue, 13); //Defines the color for the token
                         break;
                     case 2:
-                        tokens[i] = new Token((i + 1), GameColor.Red, 26, 24); //Defines the color for the token
+                        tokens[i] = new Token((i + 1), GameColor.Red, 26); //Defines the color for the token
                         break;
                     case 3:
-                        tokens[i] = new Token((i + 1), GameColor.Green, 39, 37); //Defines the color for the token
+                        tokens[i] = new Token((i + 1), GameColor.Green, 39); //Defines the color for the token
                         break;
                 }
             }
@@ -142,7 +139,7 @@ namespace Ludo2
             }
         }
 
-        //OPTIMIZE CanIMove
+        //OPTIMIZE CanMove
         //Checks if the player can move
         private void CanMove(Player turn)
         {
@@ -381,16 +378,6 @@ namespace Ludo2
                 {
                     Console.WriteLine(pl.GetToken(i));
                 }
-            }
-        }
-        
-        //Gets a list of all the fields USED FOR DEBUGGING
-        [Conditional("DEBUG")]
-        private void GetField()
-        {
-            foreach(Field fi in this.fields)
-            {
-                fi.ToString();
             }
         }
         #endregion
