@@ -11,7 +11,7 @@ namespace Ludo2
         #region Fields
         private readonly int numberOfPlayers; //Defines the number of players in the game
         private readonly int delay = 120; //The General delay for output
-        private int plrArrayId = 0; //Defines the player's turn
+        private int playerTurn = 0; //Defines the player's turn
         private int tries = 0;
 
         private Player[] players; //defines the array of players
@@ -123,7 +123,7 @@ namespace Ludo2
         {
             while(true) //Checks if the game is on
             {
-                Player turn = players[(plrArrayId)]; //Finds the player in the array
+                Player turn = players[(playerTurn)]; //Finds the player in the array
                 Design.Clear(delay);
                 Console.WriteLine("It is " + turn.Name + "'s turn\n"); //Some 'nice' output
                 do
@@ -205,7 +205,7 @@ namespace Ludo2
             }
             else
             {
-                MoveToField(players , die.GetValue);
+                MoveToField(players[playerTurn]);
                 ChangeTurn();
             }
         }
@@ -214,13 +214,13 @@ namespace Ludo2
         private void ChangeTurn()
         {
             Console.WriteLine();
-            if(plrArrayId == (numberOfPlayers - 1))
+            if(playerTurn == (numberOfPlayers - 1))
             {
-                plrArrayId = 0;
+                playerTurn = 0;
             }
             else
             {
-                plrArrayId++;
+                playerTurn++;
             }
 
             Console.WriteLine("Changing player\n");
@@ -250,101 +250,18 @@ namespace Ludo2
 
         //Moves the token
         //OPTIMIZE MoveToField
-        private void MoveToField(Player[] plr, int dieRoll)
+        private void MoveToField(Player player)
         {
-            foreach (Player pl in plr)
+
+            Token turnToken = player.GetToken(ChooseTokenToMove());
+
+            if (!turnToken.CanMove)
             {
-                Console.WriteLine("Player: " + pl.Name + " " + pl.Id + "\n");
+                MoveToField(player);
             }
-            Token turnToken = plr[plrArrayId].GetToken(ChooseTokenToMove());
-
-            int fieldToRemove = turnToken.Position - 1; //The field to remove the token from
-            int fieldToMove = turnToken.Position + (die.GetValue); //The field the token should move to
-            int dieCount = dieRoll; //Temporary variable used to get and modify the dieRoll
-            int dieRest; //How many dots left on the die
-
-            while (dieCount > 0)
+            else
             {
-                if (turnToken.CanMove) //FIX same if statement appears in the same loop
-                {
-                    if (turnToken.Position + dieRoll >= 51 && turnToken.State != TokenState.Safe)
-                    {
-                        turnToken.Position += dieRoll - 51;
-                        turnToken.Counter += dieRoll;
-                    }
-
-                    if (turnToken.Counter + dieRoll >= 56) //If the token is out of the game
-                    {
-                        fields[( fieldToRemove - 1)].RemoveToken();
-                        turnToken.State = TokenState.Finished; //The token is finished
-                        dieCount = 0;
-                    }
-                    else if (turnToken.Counter + dieRoll >= 51) //The token is in the safe field
-                    {
-                        dieRest = dieCount;
-                        turnToken.Counter += dieRoll;
-                        if (turnToken.State != TokenState.Safe)
-                        {
-                            fieldToMove = 51 + dieRest;
-                            dieCount = 0;
-                            turnToken.State = TokenState.Safe;
-                        }
-                    }
-                    else
-                    {
-                        if (turnToken.State == TokenState.Home && turnToken.CanMove) //The first move
-                        {
-                            dieCount = 0; //It shall not move away from the startposition
-                            turnToken.State = TokenState.InPlay; //The token are now in the 'InPlay' state
-                            fieldToMove = turnToken.StartPosition;
-                        }
-                        else //FIX same if statement appears in the same loop Nested
-                        {
-                            turnToken.Counter += dieRoll;
-                            fieldToMove = turnToken.Position + (dieRoll - 1); //This line is NOT USELESS
-                            dieCount = 0;
-                        }
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("\nThats not a valid piece");
-                    dieCount = 0;
-                    MoveToField(plr, dieRoll); //FIXED? Calls itself but fail to give a new value
-                }
-            }
-
-            if (turnToken.State != TokenState.Finished)
-                MoveToken(turnToken, fieldToMove, fieldToRemove);
-        }
-        
-        //Moves the token
-        private void MoveToken(Token token, int fieldToMove, int fieldToRemove)
-        {
-            if (fieldToMove == token.StartPosition && fields[fieldToMove].Color != GameColor.White)
-            {
-
-                Token tempToken = fields[fieldToMove].TokensOnField[0];
-
-                fields[fieldToMove].KillToken(tempToken);
-                fields[(fieldToMove)].RemoveToken();
-            }
-
-            if (fieldToMove <= 56)
-            {
-
-                PrintLog(token.Counter.ToString());
-                fields[fieldToMove].PlaceToken(token, token.Color);
-                if ((token.Position) != token.StartPosition)
-                {
-                    if (fieldToRemove < 0)
-                    {
-                        fieldToRemove = 0;
-                    }
-
-
-                    fields[(fieldToRemove)].RemoveToken();
-                }
+                turnToken.MoveToken(ref fields[(turnToken.Position + die.GetValue)], ref fields[turnToken.Position], die.GetValue);
             }
         }
 
