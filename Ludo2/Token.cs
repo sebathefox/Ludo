@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Ludo2
 {
@@ -16,33 +17,71 @@ namespace Ludo2
             this.CanMove = false;
         }
 
-        public void MoveToken(ref Field fieldToMove, ref Field currentField, int dieValue)
+        public void MoveToken(ref Field[] fields, int dieValue)
         {
-            currentField.TokensOnField.Remove(this); //Clears the currentField
+            ref Field currentField = ref fields[this.Position];
 
-
-
-            if (fieldToMove.TokensOnField.Count > 0)
+            if (this.Counter + dieValue > 56)
             {
-                //Token(s) on field further validate
-                if (fieldToMove.Color != this.Color && fieldToMove.TokensOnField.Count > 1)
-                {
-                    ResetToken(this);
-                }
-                else if (fieldToMove.Color == this.Color)
-                {
-                    fieldToMove.TokensOnField.Add(this);
-                }
+                currentField.TokensOnField.Remove(this);
+                currentField.Color = GameColor.White; //Clears the currentField
+
+                UpdateTokenMovement(0, TokenState.Finished);
+
+                return;
             }
 
-            //TODO Move
+            
+            ref Field fieldToMove = ref fields[this.Position + dieValue]; //Field to move token to
+
+            
+            currentField.TokensOnField.Remove(this);
+            currentField.Color = GameColor.White; //Clears the currentField
+
+
+            if (this.Position + dieValue > 51 && this.State != TokenState.Safe)
+            {
+                this.Position -= 52;
+                
+            }
+
+            if (this.State == TokenState.Home)
+            {
+                UpdateTokenMovement(0); //Sets the token on the board
+                fieldToMove.TokensOnField.Add(this);
+                fieldToMove.Color = this.Color;
+            }
+            else
+            {
+
+                if (fieldToMove.TokensOnField.Count > 0)
+                {
+                    //Token(s) on field further validate
+                    if (fieldToMove.Color != this.Color && fieldToMove.TokensOnField.Count > 1)
+                    {
+                        ResetToken(this);
+                    }
+                    else if (fieldToMove.Color == this.Color)
+                    {
+                        UpdateTokenMovement(dieValue);
+                        fieldToMove.TokensOnField.Add(this);
+                        fieldToMove.Color = this.Color;
+
+                    }
+                }
+                //TODO Move
+                UpdateTokenMovement(dieValue);
+                fieldToMove.TokensOnField.Add(this);
+                fieldToMove.Color = this.Color;
+            }
         }
 
-        private void UpdateTokenMovement(Token token, int newPosition, int dieValue, TokenState state = TokenState.InPlay)
+        private void UpdateTokenMovement(int dieValue, TokenState state = TokenState.InPlay)
         {
-            token.Position = newPosition;
-            token.Counter += dieValue;
-            token.State = state;
+            this.Position += dieValue;
+            this.Counter += dieValue;
+            this.State = state;
+            Debug.WriteLine(this.Counter);
         }
 
         private void ResetToken(Token token)

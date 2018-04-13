@@ -261,7 +261,8 @@ namespace Ludo2
             }
             else
             {
-                turnToken.MoveToken(ref fields[(turnToken.Position + die.GetValue)], ref fields[turnToken.Position], die.GetValue);
+                
+                    turnToken.MoveToken(ref fields, die.GetValue);
             }
         }
 
