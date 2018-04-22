@@ -30,10 +30,8 @@ namespace Ludo2
 
                 return;
             }
-
             
             ref Field fieldToMove = ref fields[this.Position + dieValue]; //Field to move token to
-
             
             currentField.TokensOnField.Remove(this);
             currentField.Color = GameColor.White; //Clears the currentField

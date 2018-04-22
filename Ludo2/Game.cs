@@ -261,7 +261,6 @@ namespace Ludo2
             }
             else
             {
-                
                     turnToken.MoveToken(ref fields, die.GetValue);
             }
         }
