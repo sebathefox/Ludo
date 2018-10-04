@@ -6,3 +6,4 @@ This project was a school project to make a ludo game in C# without GUI.
 hej Seb!!!!
 hej igen
 hej hej  igen
+jhjh
